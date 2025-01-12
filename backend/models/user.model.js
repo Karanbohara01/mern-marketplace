@@ -1,7 +1,4 @@
 import mongoose from "mongoose";
-
-mongoose.connect("mongodb://localhost:27017/magesDB");
-
 const userSchema = new mongoose.Schema({
   userName: {
     type: String,
