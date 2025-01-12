@@ -6,8 +6,6 @@ const categorySchema = new mongoose.Schema({
     required: true,
     default: "",
   },
-  // categoryId
-
   categoryId: {
     type: String,
     required: true,
