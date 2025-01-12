@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  email: {
+    type: String,
+    require: true,
+  },
 });
 
 const User = new mongoose.model("User", userSchema);
