@@ -22,6 +22,7 @@ const postSchema = new mongoose.Schema({
     default: "",
   },
   category: {
+    type: String,
     ref: "Category",
   },
   status: {
@@ -31,3 +32,4 @@ const postSchema = new mongoose.Schema({
 });
 
 const Post = new mongoose.Model("Post", postSchema);
+export default Post;
