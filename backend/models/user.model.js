@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 mongoose.connect("mongodb://localhost:27017/magesDB");
 
-const mageSchema = new mongoose.Schema({
-  name: {
+const userSchema = new mongoose.Schema({
+  userName: {
     type: String,
     require: true,
   },
@@ -11,9 +11,6 @@ const mageSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  mana_power: Number,
-  health: Number,
-  gold: Number,
 });
 
-const Mage = new mongoose.model("Mage", mageSchema);
+const User = new mongoose.model("User", userSchema);
