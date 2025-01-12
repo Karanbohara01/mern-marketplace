@@ -7,7 +7,7 @@ const mageSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  power_type: {
+  password: {
     type: String,
     require: true,
   },
