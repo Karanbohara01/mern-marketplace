@@ -2,10 +2,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { urlencoded } from "express";
+import categoryRoute from "./routes/category.route.js";
 import messageRoute from "./routes/message.route.js";
 import postRoute from "./routes/post.route.js";
 import userRoute from "./routes/user.route.js";
 import { app, server } from "./socket/socket.js";
+
 import connectDB from "./utils/db.js";
 
 // Load environment variables
@@ -32,6 +34,7 @@ connectDB();
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/post", postRoute);
 app.use("/api/v1/message", messageRoute);
+app.use("/api/v1/category", categoryRoute);
 
 // Catch-all Route for Undefined Endpoints
 app.use((req, res, next) => {
