@@ -1,8 +1,9 @@
 import useGetUserProfile from "@/hooks/useGetUserProfile";
-import { AtSign, Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import Rating from "./Rating";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -104,12 +105,14 @@ const Profile = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">
-                  {userProfile?.bio || "bio here..."}
+                  Bio | {userProfile?.bio || "bio here..."}
                 </span>
                 <Badge className="w-fit" variant="secondary">
-                  <AtSign />
                   <span className="pl-1">{userProfile?.username}</span>
                 </Badge>
+                <span className="text-yellow-400">
+                  <Rating />
+                </span>
               </div>
             </div>
           </section>

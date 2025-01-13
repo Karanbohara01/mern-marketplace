@@ -168,7 +168,7 @@ const Post = ({ post }) => {
         </Dialog>
       </div>
       <img
-        className="rounded-lg my-0 p-1  w-full aspect-square object-cover"
+        className="rounded-lg my-0 p-1 h-32  w-52 aspect-square object-cover"
         src={post.image}
         alt="post_img"
       />

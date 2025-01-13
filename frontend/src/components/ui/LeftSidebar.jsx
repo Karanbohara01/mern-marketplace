@@ -2,16 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { setAuthUser } from "@/redux/authSlice";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+import { BiSolidCategory } from "react-icons/bi";
+import { FaMessage } from "react-icons/fa6";
+import { IoLogOut, IoNotifications } from "react-icons/io5";
+import { MdAddBox } from "react-icons/md";
+
 import axios from "axios";
-import {
-  CastIcon,
-  Heart,
-  LucideLogOut,
-  Menu,
-  MessageCircleMore,
-  PlusIcon,
-  X,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { AiFillHome } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,12 +63,15 @@ const LeftSidebar = () => {
   };
 
   const sidebarItems = [
-    { icon: <AiFillHome />, text: "Home" },
+    { icon: <AiFillHome className="text-black w-6 h-6" />, text: "Home" },
     // { icon: <Search />, text: "Search" },
     // { icon: <TrendingUp />, text: "Explore" },
-    { icon: <MessageCircleMore />, text: "Messages" },
-    { icon: <Heart />, text: "Notifications" },
-    { icon: <PlusIcon />, text: "Post" },
+    { icon: <FaMessage className="text-black h-5 w-5" />, text: "Messages" },
+    {
+      icon: <IoNotifications className="text-black w-7 h-7" />,
+      text: "Notifications",
+    },
+    { icon: <MdAddBox className="text-black w-7 h-6" />, text: "Post" },
 
     {
       icon: (
@@ -82,16 +82,27 @@ const LeftSidebar = () => {
       ),
       text: "Profile",
     },
-    { icon: <LucideLogOut />, text: "Logout" },
-    { icon: <CastIcon />, text: "Categories" },
+
+    {
+      icon: <BiSolidCategory className="text-black w-7 h-7" />,
+      text: "Categories",
+    },
+    { icon: <IoLogOut className="text-black w-7 h-7" />, text: "Logout" },
   ];
 
   return (
-    <div className="fixed top-0 left-0 z-10 h-screen bg-gray-950 text-white">
+    <div className="fixed top-0  left-0 z-10 h-screen bg-gradient-to-b from-green-400 to-green-500 text-white shadow-lg">
       {/* Hamburger Menu Toggle */}
-      <div className="flex items-center justify-between p-4 md:hidden">
-        <button onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+      <div className="flex items-center   justify-center p-4 md:hidden">
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-black hover:text-black "
+        >
+          {menuOpen ? (
+            <X className="text-black text-center font-bold " size={28} />
+          ) : (
+            <Menu size={28} />
+          )}
         </button>
       </div>
 
@@ -99,53 +110,53 @@ const LeftSidebar = () => {
       <div
         className={`${
           menuOpen ? "block" : "hidden"
-        } md:block h-full  border-r border-gray-700`}
+        } md:block h-full overflow-y-auto border-r border-gray-700`}
       >
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center md:items-start px-4 pt-6">
           {sidebarItems.map((item, index) => (
             <div
               key={index}
               onClick={() => sidebarHandler(item.text)}
-              className="flex items-center gap-3 p-3 my-3 text-green-600 rounded-lg cursor-pointer hover:bg-gray-700"
+              className="flex items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-blue-700 hover:scale-105"
             >
-              <div className="text-lg">{item.icon}</div>
-              <span className="hidden md:block ">{item.text}</span>
+              <div className="text-lg text-blue-300">{item.icon}</div>
+              <span className="hidden md:block font-medium text-black">
+                {item.text}
+              </span>
               {item.text === "Notifications" && likeNotification.length > 0 && (
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       size="icon"
-                      className="rounded-full h-5 w-5 bg-red-600 hover:bg-red-600 absolute  left-6"
+                      className="rounded-full h-4 w-4 bg-red-600 text-xs font-bold flex items-center justify-center absolute left-6"
                     >
                       {likeNotification.length}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent>
-                    <div>
+                  <PopoverContent className="bg-gray-800 border border-gray-600 text-gray-200">
+                    <div className="p-2">
                       {likeNotification.length === 0 ? (
-                        <p>No new notification</p>
+                        <p className="text-sm">No new notifications</p>
                       ) : (
-                        likeNotification.map((notification) => {
-                          return (
-                            <div
-                              key={notification.userId}
-                              className="flex items-center gap-2 my-2"
-                            >
-                              <Avatar>
-                                <AvatarImage
-                                  src={notification.userDetails?.profilePicture}
-                                />
-                                <AvatarFallback>CN</AvatarFallback>
-                              </Avatar>
-                              <p className="text-sm">
-                                <span className="font-bold">
-                                  {notification.userDetails?.username}
-                                </span>{" "}
-                                liked your post
-                              </p>
-                            </div>
-                          );
-                        })
+                        likeNotification.map((notification) => (
+                          <div
+                            key={notification.userId}
+                            className="flex items-center gap-3 my-2 p-2 bg-gray-700 rounded-lg"
+                          >
+                            <Avatar>
+                              <AvatarImage
+                                src={notification.userDetails?.profilePicture}
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            <p className="text-sm">
+                              <span className="font-semibold text-white">
+                                {notification.userDetails?.username}
+                              </span>{" "}
+                              liked your post
+                            </p>
+                          </div>
+                        ))
                       )}
                     </div>
                   </PopoverContent>
@@ -157,7 +168,7 @@ const LeftSidebar = () => {
       </div>
 
       {/* CreatePost Component */}
-      <div className="absolute bottom-4 w-full">
+      <div className="absolute bottom-4 w-full flex justify-center">
         <CreatePost open={open} setOpen={setOpen} />
       </div>
     </div>
