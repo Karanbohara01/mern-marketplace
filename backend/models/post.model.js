@@ -1,35 +1,9 @@
 import mongoose from "mongoose";
-
 const postSchema = new mongoose.Schema({
-  productName: {
-    type: String,
-    required: true,
-    default: "",
-  },
-  image: {
-    type: String,
-    required: true,
-    default: "",
-  },
-  description: {
-    required: true,
-    type: String,
-    default: "",
-  },
-  price: {
-    type: String,
-    requred: true,
-    default: "",
-  },
-  category: {
-    type: String,
-    ref: "Category",
-  },
-  status: {
-    type: bool,
-    default: true,
-  },
+  caption: { type: String, default: "" },
+  image: { type: String, required: true },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
-
-const Post = new mongoose.Model("Post", postSchema);
-export default Post;
+export const Post = mongoose.model("Post", postSchema);
