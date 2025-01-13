@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 
-const categorySchema = new mongoose.Schema({
-  categoryName: {
-    type: String,
-    required: true,
-    default: "",
+// Define the Category schema
+const categorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Category name is required"],
+      trim: true,
+      unique: true, // Ensure category names are unique
+    },
   },
-  categoryId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
+  {
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
+  }
+);
 
-const Category = new mongoose.model("Category", categorySchema);
+// Create the Category model
+const Category = mongoose.model("Category", categorySchema);
+
 export default Category;
