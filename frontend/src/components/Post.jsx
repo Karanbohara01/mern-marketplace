@@ -124,7 +124,7 @@ const Post = ({ post }) => {
     }
   };
   return (
-    <div className="my-8   rounded-md   text-white w-full max-w-sm mx-auto">
+    <div className="my-8   rounded-md    text-white w-full max-w-sm mx-auto">
       <div className="flex items-center justify-end  ">
         {/* <div className="flex items-center gap-2">
           <Avatar>

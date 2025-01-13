@@ -1,4 +1,6 @@
+import { setSelectedUser } from "@/redux/authSlice";
 import { setPosts } from "@/redux/postSlice";
+
 import axios from "axios";
 import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -15,6 +17,11 @@ import { Dialog, DialogContent } from "./ui/dialog";
 const CommentDialog = ({ open, setOpen }) => {
   const [text, setText] = useState("");
   const { selectedPost, posts } = useSelector((store) => store.post);
+
+  const { user, suggestedUsers, selectedUser } = useSelector(
+    (store) => store.auth
+  );
+
   const [comment, setComment] = useState([]);
   const dispatch = useDispatch();
 
@@ -33,7 +40,34 @@ const CommentDialog = ({ open, setOpen }) => {
     }
   };
 
-  const sendMessageHandler = async () => {
+  const sendMessageHandler = async (receiverId) => {
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/api/v1/message/send/${receiverId}`,
+        { message: textMessage },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        dispatch(setMessages([...(messages || []), res.data.newMessage]));
+        setTextMessage("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setSelectedUser(null));
+    };
+  }, []);
+
+  const sendCommentHandler = async () => {
     try {
       const res = await axios.post(
         `http://localhost:8000/api/v1/post/${selectedPost?._id}/comment`,
@@ -68,17 +102,21 @@ const CommentDialog = ({ open, setOpen }) => {
     <Dialog open={open}>
       <DialogContent
         onInteractOutside={() => setOpen(false)}
-        className=" md:w-[60%]  max-w-3xl md:w--1/2   rounded-none  p-0 flex flex-col"
+        className="max-w-sm ml-8  sm:rounded-md  sm:max-w-xl md:max-w-2xl lg:max-w-4xl w-full rounded-md  p-0 flex flex-col"
       >
-        <div className="flex flex-1">
-          <div className="w-1/2">
+        <div className="flex  flex-col lg:flex-row flex-1">
+          {/* Image Section */}
+          <div className="w-full  lg:w-1/2 h-64 lg:h-auto">
             <img
               src={selectedPost?.image}
               alt="post_img"
-              className="w-full h-full object-cover rounded-l-lg"
+              className="w-full h-full object-cover rounded-t-lg lg:rounded-l-lg lg:rounded-t-lg"
             />
           </div>
-          <div className="w-1/2 flex flex-col justify-between">
+
+          {/* Content Section */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-between">
+            {/* Header */}
             <div className="flex items-center justify-between p-4">
               <div className="flex gap-3 items-center">
                 <Link>
@@ -88,62 +126,60 @@ const CommentDialog = ({ open, setOpen }) => {
                   </Avatar>
                 </Link>
                 <div>
-                  <Link className="font-semibold text-xs">
+                  <Link className="font-semibold text-xs sm:text-sm">
                     {selectedPost?.author?.username}
                   </Link>
-
-                  {/* <span className='text-gray-600 text-sm'>Bio here...</span> */}
                 </div>
               </div>
-              {/* 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <MoreHorizontal className="cursor-pointer" />
-                </DialogTrigger>
-                <DialogContent className="flex flex-col items-center text-sm text-center">
-                  <div className="cursor-pointer w-full text-[#ED4956] font-bold">
-                    Unfollow
-                  </div>
-                  <div className="cursor-pointer w-full">Add to favorites</div>
-                </DialogContent>
-              </Dialog> */}
             </div>
+
             <hr />
-            <h1 className="p-2 font-bold text-xl">
-              <Link className="">{selectedPost?.caption}</Link>
-            </h1>
-            <h1 className="p-2 font-bold text-xl">
-              <Link className="">NPR.{selectedPost?.price}</Link>
-            </h1>
-            <p className=" p-2 font-bold text-sm">
-              <Link className="">{selectedPost?.description}</Link>
-            </p>
-            <p className=" p-2 font-bold text-sm">
-              <Link className="">{selectedPost?.location}</Link>
-            </p>
-            <p className=" p-2 font-bold text-sm">
-              <Link className="">{selectedPost?.status}</Link>
-            </p>
-            <div className="flex-1 overflow-y-auto max-h-96 p-4">
+
+            {/* Post Details */}
+            <div className="p-4 space-y-2">
+              <h1 className="font-bold text-lg sm:text-xl">
+                <Link>{selectedPost?.caption}</Link>
+              </h1>
+              <h1 className="font-bold text-lg sm:text-xl">
+                <Link>NPR.{selectedPost?.price}</Link>
+              </h1>
+              <p className="font-bold text-sm sm:text-base">
+                <Link>{selectedPost?.description}</Link>
+              </p>
+              <p className="font-bold text-sm sm:text-base">
+                <Link>{selectedPost?.location}</Link>
+              </p>
+              <p className="font-bold text-sm sm:text-base">
+                <Link>{selectedPost?.status}</Link>
+              </p>
+            </div>
+
+            {/* Comments Section */}
+            <div className="flex-1 overflow-y-auto max-h-40 sm:max-h-60 md:max-h-96 p-4">
               {comment.map((comment) => (
                 <Comment key={comment?._id} comment={comment} />
               ))}
             </div>
 
-            <div className="flex  items-center justify-evenly">
-              <div className="  flex items-center">
+            {/* Interactions */}
+            <div className="flex items-center justify-evenly p-4 space-x-4 text-xs sm:text-sm">
+              <div className="flex items-center gap-2">
                 <AiFillLike />
                 <span>{selectedPost?.likes?.length} likes</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2">
                 <FaComment />
                 <span>{selectedPost?.comments?.length} comments</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
-                <Send />
-                <span>Send offer?</span>
-              </div>
+              <Link to="/chat">
+                <div className="flex items-center gap-2">
+                  <Send />
+                  <span>Send offer?</span>
+                </div>
+              </Link>
             </div>
+
+            {/* Add Comment */}
             <div className="p-4">
               <div className="flex items-center gap-2">
                 <input
@@ -151,11 +187,11 @@ const CommentDialog = ({ open, setOpen }) => {
                   value={text}
                   onChange={changeEventHandler}
                   placeholder="Add a comment..."
-                  className="w-full outline-none border text-sm border-gray-300 p-2 rounded"
+                  className="w-full outline-none border text-xs sm:text-sm border-gray-300 p-2 rounded"
                 />
                 <Button
                   disabled={!text.trim()}
-                  onClick={sendMessageHandler}
+                  onClick={sendCommentHandler}
                   variant="outline"
                 >
                   Send

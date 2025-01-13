@@ -14,6 +14,8 @@ const ChatPage = () => {
   const { user, suggestedUsers, selectedUser } = useSelector(
     (store) => store.auth
   );
+  console.log(user);
+
   const { onlineUsers, messages } = useSelector((store) => store.chat);
   const dispatch = useDispatch();
 
