@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { io } from "socket.io-client";
 import "./App.css";
+import CategoryList from "./components/CategoryList";
 import ChatPage from "./components/ChatPage";
 import EditProfile from "./components/EditProfile";
 import Home from "./components/Home";
@@ -31,6 +32,10 @@ const browserRouter = createBrowserRouter([
       {
         path: "/chat",
         element: <ChatPage />,
+      },
+      {
+        path: "/category",
+        element: <CategoryList />,
       },
     ],
   },

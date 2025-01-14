@@ -59,6 +59,8 @@ const LeftSidebar = () => {
       navigate("/");
     } else if (textType === "Messages") {
       navigate("/chat");
+    } else if (textType === "Categories") {
+      navigate("/category");
     }
   };
 
@@ -105,19 +107,24 @@ const LeftSidebar = () => {
           )}
         </button>
       </div>
-
       {/* Sidebar Menu */}
       <div
         className={`${
           menuOpen ? "block" : "hidden"
         } md:block h-full overflow-y-auto border-r border-gray-700`}
       >
+        {/* <span>
+          <h1 className="m-2 ml-7 text-black -mb-16   text-2xl font-bold">
+            Koselie
+          </h1>
+        </span> */}
+
         <div className="flex flex-col items-center md:items-start px-4 pt-6">
           {sidebarItems.map((item, index) => (
             <div
               key={index}
               onClick={() => sidebarHandler(item.text)}
-              className="flex items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-blue-700 hover:scale-105"
+              className="flex items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-green-200 hover:scale-105"
             >
               <div className="text-lg text-blue-300">{item.icon}</div>
               <span className="hidden md:block font-medium text-black">
@@ -166,7 +173,6 @@ const LeftSidebar = () => {
           ))}
         </div>
       </div>
-
       {/* CreatePost Component */}
       <div className="absolute bottom-4 w-full flex justify-center">
         <CreatePost open={open} setOpen={setOpen} />
