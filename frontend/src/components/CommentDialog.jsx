@@ -15,15 +15,10 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent } from "./ui/dialog";
 
 const CommentDialog = ({ open, setOpen }) => {
-  const [text, setText] = useState("");
-  const { selectedPost, posts } = useSelector((store) => store.post);
-
-  const { user, suggestedUsers, selectedUser } = useSelector(
-    (store) => store.auth
-  );
-
   const [comment, setComment] = useState([]);
   const dispatch = useDispatch();
+  const [text, setText] = useState("");
+  const { selectedPost, posts } = useSelector((store) => store.post);
 
   useEffect(() => {
     if (selectedPost) {
@@ -38,34 +33,13 @@ const CommentDialog = ({ open, setOpen }) => {
     } else {
       setText("");
     }
-  };
 
-  const sendMessageHandler = async (receiverId) => {
-    try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/message/send/${receiverId}`,
-        { message: textMessage },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      if (res.data.success) {
-        dispatch(setMessages([...(messages || []), res.data.newMessage]));
-        setTextMessage("");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    useEffect(() => {
+      return () => {
+        dispatch(setSelectedUser(null));
+      };
+    }, []);
   };
-
-  useEffect(() => {
-    return () => {
-      dispatch(setSelectedUser(null));
-    };
-  }, []);
 
   const sendCommentHandler = async () => {
     try {
