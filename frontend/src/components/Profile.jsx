@@ -88,9 +88,9 @@ const Profile = () => {
                   <span className="font-semibold">
                     {userProfile?.posts.length}{" "}
                   </span>
-                  posts
+                  Listings
                 </p>
-                <p>
+                {/* <p>
                   <span className="font-semibold">
                     {userProfile?.followers.length}{" "}
                   </span>
@@ -101,7 +101,7 @@ const Profile = () => {
                     {userProfile?.following.length}{" "}
                   </span>
                   following
-                </p>
+                </p> */}
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">
@@ -126,7 +126,7 @@ const Profile = () => {
               }`}
               onClick={() => handleTabChange("posts")}
             >
-              POSTS
+              Your Listings
             </span>
             <span
               className={`py-3 cursor-pointer text-black ${

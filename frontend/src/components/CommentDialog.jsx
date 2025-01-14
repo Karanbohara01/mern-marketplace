@@ -19,6 +19,7 @@ const CommentDialog = ({ open, setOpen }) => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
   const { selectedPost, posts } = useSelector((store) => store.post);
+  const { suggestUsers } = useSelector((store) => store.auth);
 
   useEffect(() => {
     if (selectedPost) {
@@ -103,6 +104,13 @@ const CommentDialog = ({ open, setOpen }) => {
                   <Link className="font-semibold text-xs sm:text-sm">
                     {selectedPost?.author?.username}
                   </Link>
+                </div>
+
+                <div>
+                  {/* <Link to={`/chat/${selectedPost?.author?._id}`}>
+                    click me
+                  </Link> */}
+                  <Link to="/chat">click me</Link>
                 </div>
               </div>
             </div>
