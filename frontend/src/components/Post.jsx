@@ -18,6 +18,7 @@ const Post = ({ post }) => {
   const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
   const [postLike, setPostLike] = useState(post.likes.length);
   const [comment, setComment] = useState(post.comments);
+  const { selectedPost } = useSelector((store) => store.post);
   const dispatch = useDispatch();
 
   const changeEventHandler = (e) => {
@@ -124,7 +125,7 @@ const Post = ({ post }) => {
     }
   };
   return (
-    <div className="my-8   rounded-md    text-white w-full max-w-sm mx-auto">
+    <div className="my-8    rounded-md    text-white w-full max-w-sm mx-auto">
       <div className="flex items-center justify-end  ">
         {/* <div className="flex items-center gap-2">
           <Avatar>
@@ -139,9 +140,7 @@ const Post = ({ post }) => {
           </div>
         </div> */}
         <Dialog>
-          <DialogTrigger asChild>
-            {/* <MoreHorizontal className="cursor-pointer mx-4 my-1 " /> */}
-          </DialogTrigger>
+          <DialogTrigger asChild></DialogTrigger>
           <DialogContent className="flex flex-col items-center text-sm text-center">
             {post?.author?._id !== user?._id && (
               <Button
@@ -168,7 +167,7 @@ const Post = ({ post }) => {
         </Dialog>
       </div>
       <img
-        className="rounded-lg my-0 p-1 h-32  w-52 aspect-square object-cover"
+        className="rounded-lg my-0 p-1 h-32  w-full aspect-square object-cover "
         src={post.image}
         alt="post_img"
       />
@@ -212,10 +211,17 @@ const Post = ({ post }) => {
         {/* <span className="font-medium mr-2">{post.author?.username}</span> */}
         {post.caption}
       </p>
-      <span className="mx-2 flex gap-2">
+      <span className="mx-2 flex text-red-600 gap-2">
         <LocateIcon className="text-red-400" />
         Kathmandu
       </span>
+      {/* <span className="mx-2 flex text-red-600 gap-2">
+        {post.category.map((cat) => (
+          <span className="text-white" key={cat._id}>
+            {cat.name}
+          </span>
+        ))}
+      </span> */}
 
       <div className=" flex items-center mb-6 justify-start gap-4">
         <div className=" w-32  flex items-center justify-center gap-2">
@@ -232,30 +238,12 @@ const Post = ({ post }) => {
             className="cursor-pointer text-sm text-white "
           >
             {/* View all {comment.length} comments */}
-            <Button className="bg-green-500"> View Details</Button>
+            <Button className="bg-green-500 mr-4"> View Details</Button>
           </span>
         )}
       </div>
 
       <CommentDialog open={open} setOpen={setOpen} />
-
-      {/* <div className="flex items-center  justify-between">
-        <Input
-          type="text"
-          placeholder="Add a comment..."
-          value={text}
-          onChange={changeEventHandler}
-          className="outline-none focus-visible:ring-transparent text-sm text-gray-900 w-[90%] m-2 "
-        />
-        {text && (
-          <span
-            onClick={commentHandler}
-            className="text-[#3BADF8] cursor-pointer mr-4"
-          >
-            Post
-          </span>
-        )}
-      </div> */}
     </div>
   );
 };

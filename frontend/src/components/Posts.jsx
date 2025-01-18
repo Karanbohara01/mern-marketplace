@@ -10,7 +10,7 @@ const Posts = () => {
   }
 
   // Log posts for debugging
-  // console.log(posts);
+  console.log(posts);
 
   // Filter out posts with invalid or missing `_id`
   const validPosts = posts.filter((post) => post && post._id);
@@ -25,6 +25,7 @@ const Posts = () => {
       {validPosts.map((post) => (
         <div key={post._id}>
           <Post post={post} />
+          
         </div>
       ))}
     </div>

@@ -1,41 +1,61 @@
-import sharp from "sharp";
-import { Comment } from "../models/comment.model.js";
-import { Post } from "../models/post.model.js";
-import { User } from "../models/user.model.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
-import cloudinary from "../utils/cloudinary.js";
+// import sharp from "sharp";
+// import { Comment } from "../models/comment.model.js";
+// import { Post } from "../models/post.model.js";
+// import { User } from "../models/user.model.js";
+// import { getReceiverSocketId, io } from "../socket/socket.js";
+// import cloudinary from "../utils/cloudinary.js";
 
 // export const addNewPost = async (req, res) => {
 //   try {
-//     const { caption } = req.body;
+//     // const { caption, description, price, category } = req.body;
+//     const { caption, description, price, category: categoryId } = req.body;
+
 //     const image = req.file;
 //     const authorId = req.id;
 
+//     // Validate required fields
 //     if (!image) return res.status(400).json({ message: "Image required" });
+//     if (!caption || !price || !description || !category) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
 
-//     // image upload
+//     // Optimize and upload image
 //     const optimizedImageBuffer = await sharp(image.buffer)
 //       .resize({ width: 800, height: 800, fit: "inside" })
 //       .toFormat("jpeg", { quality: 80 })
 //       .toBuffer();
 
-//     // buffer to data uri
 //     const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString(
 //       "base64"
 //     )}`;
 //     const cloudResponse = await cloudinary.uploader.upload(fileUri);
+
+//     // Create post
 //     const post = await Post.create({
 //       caption,
+//       price,
+//       description,
+//       category: categoryId,
 //       image: cloudResponse.secure_url,
 //       author: authorId,
 //     });
+
+//     // Add post to user's posts
 //     const user = await User.findById(authorId);
 //     if (user) {
 //       user.posts.push(post._id);
 //       await user.save();
 //     }
 
+//     // Populate author field and category field
+//     // (await post.populate({ path: "author", select: "-password" })).populate({
+//     //   path: "category",
+//     // });
+
 //     await post.populate({ path: "author", select: "-password" });
+//     await post.populate({
+//       path: "category",
+//     });
 
 //     return res.status(201).json({
 //       message: "New post added",
@@ -43,22 +63,40 @@ import cloudinary from "../utils/cloudinary.js";
 //       success: true,
 //     });
 //   } catch (error) {
-//     console.log(error);
+//     console.error(error);
+//     return res
+//       .status(500)
+//       .json({ message: "Internal server error", success: false });
 //   }
 // };
 
+import sharp from "sharp";
+import Category from "../models/category.model.js";
+import { Comment } from "../models/comment.model.js";
+import { Post } from "../models/post.model.js";
+import { User } from "../models/user.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
+import cloudinary from "../utils/cloudinary.js";
+
 export const addNewPost = async (req, res) => {
+  const _dummyCategoryForImport = Category;
+
   try {
-    const { caption, description, price, category } = req.body;
+    const { caption, description, price, category: category } = req.body;
     const image = req.file;
     const authorId = req.id;
 
     // Validate required fields
-    if (!image) return res.status(400).json({ message: "Image required" });
+    if (!image) {
+      return res
+        .status(400)
+        .json({ message: "Image required", success: false });
+    }
+    // Validate required fields
+
     if (!caption || !price || !description || !category) {
       return res.status(400).json({ message: "All fields are required" });
     }
-
     // Optimize and upload image
     const optimizedImageBuffer = await sharp(image.buffer)
       .resize({ width: 800, height: 800, fit: "inside" })
@@ -75,20 +113,26 @@ export const addNewPost = async (req, res) => {
       caption,
       price,
       description,
-      category,
+      category: Array.isArray(category) ? category : [category], // Ensure category is an array
       image: cloudResponse.secure_url,
       author: authorId,
     });
 
     // Add post to user's posts
     const user = await User.findById(authorId);
-    if (user) {
-      user.posts.push(post._id);
-      await user.save();
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
     }
+    user.posts.push(post._id);
+    await user.save();
 
-    // Populate author field
-    await post.populate({ path: "author", select: "-password" });
+    // Populate author and category fields
+    await post.populate([
+      { path: "author", select: "-password" },
+      { path: "category" },
+    ]);
 
     return res.status(201).json({
       message: "New post added",
@@ -97,24 +141,41 @@ export const addNewPost = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ message: "Internal server error", success: false });
+    let message = "Internal server error";
+    if (error.name === "ValidationError") {
+      message = "Invalid Input Data";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.errors,
+      });
+    } else if (error.name === "CastError") {
+      message = "Invalid ID";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.message,
+      });
+    }
+    return res.status(500).json({ message, success: false });
   }
 };
 
 export const getAllPost = async (req, res) => {
   try {
     const posts = await Post.find()
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .populate({ path: "author", select: "username profilePicture" })
       .populate({
         path: "comments",
-        sort: { createdAt: -1 },
+        sort: { createdAt: 1 },
         populate: {
           path: "author",
           select: "username profilePicture",
         },
+      })
+      .populate({
+        path: "category",
       });
     return res.status(200).json({
       posts,
@@ -128,14 +189,14 @@ export const getUserPost = async (req, res) => {
   try {
     const authorId = req.id;
     const posts = await Post.find({ author: authorId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .populate({
         path: "author",
         select: "username, profilePicture",
       })
       .populate({
         path: "comments",
-        sort: { createdAt: -1 },
+        sort: { createdAt: 1 },
         populate: {
           path: "author",
           select: "username, profilePicture",
