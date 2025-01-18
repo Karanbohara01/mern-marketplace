@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { io } from "socket.io-client";
+import AdminDashboard from "./admin/AdminDashboard";
 import "./App.css";
 import CategoryList from "./components/CategoryList";
 import ChatPage from "./components/ChatPage";
@@ -33,6 +34,7 @@ const browserRouter = createBrowserRouter([
         path: "/chat",
         element: <ChatPage />,
       },
+
       {
         path: "/category",
         element: <CategoryList />,
@@ -47,6 +49,10 @@ const browserRouter = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/admin-dashboard",
+    element: <AdminDashboard />,
   },
 ]);
 

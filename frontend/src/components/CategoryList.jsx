@@ -39,9 +39,12 @@ const CategoryList = () => {
     setLoading(true);
     setError(null); // Clear any previous error
     try {
-      const response = await axios.get(API_URL, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/category",
+        {
+          withCredentials: true,
+        }
+      );
       setCategories(response.data);
     } catch (err) {
       setError(err.message || "Failed to fetch categories.");

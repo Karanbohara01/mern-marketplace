@@ -4,6 +4,7 @@ import LeftSidebar from "./ui/LeftSidebar";
 const MainLayout = () => {
   return (
     <div className="">
+      {/* <Header /> */}
       <LeftSidebar />
       <div>
         <Outlet />

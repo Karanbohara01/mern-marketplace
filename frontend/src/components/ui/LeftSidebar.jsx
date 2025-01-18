@@ -93,7 +93,7 @@ const LeftSidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0  left-0 z-10 h-screen bg-gradient-to-b from-green-400 to-green-500 text-white shadow-lg">
+    <div className="fixed   left-0 z-10 h-screen bg-gradient-to-b from-green-400 to-green-500 text-white shadow-lg">
       {/* Hamburger Menu Toggle */}
       <div className="flex items-center   justify-center p-4 md:hidden">
         <button
