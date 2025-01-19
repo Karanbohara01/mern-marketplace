@@ -54,10 +54,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen">
+    <div className="flex items-center bg-gray-950 text-white justify-center h-screen w-screen">
       <form
         onSubmit={signupHandler}
-        className="shadow-lg flex flex-col min-w-96 gap-5 p-8"
+        className="shadow-lg border rounded-sm border-white flex flex-col min-w-96 gap-5 p-8"
       >
         <div className="my-4">
           <h1 className="font-bold text-xl text-center py-2">Koselie</h1>
@@ -92,7 +92,7 @@ const Signup = () => {
             name="password"
             value={input.password}
             onChange={changeEventHandler}
-            className="focus-visible:ring-transparent my-2"
+            className="focus-visible:ring-transparent text-black my-2"
           />
         </div>
         {isLoading ? (
@@ -101,7 +101,9 @@ const Signup = () => {
             <Loader2 className="w-4 mr-2 animate-spin" />
           </Button>
         ) : (
-          <Button type="submit">Signup</Button>
+          <Button className="bg-green-500 hover:bg-green-600" type="submit">
+            Signup
+          </Button>
         )}
 
         <span className="text-center ">
