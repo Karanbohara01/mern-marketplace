@@ -59,15 +59,15 @@ const Login = () => {
     }
   }, []);
   return (
-    <div className="flex items-center w-screen h-screen justify-center">
+    <div className="flex items-center w-screen bg-gray-950 text-white  h-screen justify-center">
       <form
         onSubmit={signupHandler}
-        className="shadow-lg flex flex-col gap-5 p-8"
+        className="shadow-lg flex border-white border rounded-sm flex-col gap-5 p-8"
       >
         <div className="my-4">
-          <h1 className="text-center font-bold text-xl">LOGO</h1>
+          <h1 className="text-center min-w-80 font-bold text-xl">Koselie</h1>
           <p className="text-sm text-center">
-            Login to see photos & videos from your friends
+            Login to see listings from your friends
           </p>
         </div>
         <div>
@@ -77,7 +77,7 @@ const Login = () => {
             name="email"
             value={input.email}
             onChange={changeEventHandler}
-            className="focus-visible:ring-transparent my-2"
+            className="focus-visible:ring-transparent text-gray-900 my-2"
           />
         </div>
         <div>
@@ -96,7 +96,9 @@ const Login = () => {
             Please wait
           </Button>
         ) : (
-          <Button type="submit">Login</Button>
+          <Button className="bg-green-500 hover:bg-green-600" type="submit">
+            Login
+          </Button>
         )}
 
         <span className="text-center">
