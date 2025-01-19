@@ -110,7 +110,6 @@ const CommentDialog = ({ open, setOpen }) => {
                   {/* <Link to={`/chat/${selectedPost?.author?._id}`}>
                     click me
                   </Link> */}
-                  <Link to="/chat">click me</Link>
                 </div>
               </div>
             </div>
