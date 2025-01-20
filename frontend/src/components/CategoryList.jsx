@@ -169,9 +169,9 @@ const CategoryList = () => {
         <div className="flex flex-col items-center space-y-4">
           {/* Loader Animation */}
           <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-opacity-75"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-purple-500 border-opacity-75"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Loader2 className="text-green-500 h-8 w-8" />
+              <Loader2 className="text-purple-500 h-8 w-8" />
             </div>
           </div>
           {/* Loading Text */}
@@ -193,7 +193,7 @@ const CategoryList = () => {
   }
   return (
     <div className=" flex items-center justify-center">
-      <div className="flex flex-col items-center  md:ml-56 lg:ml-52 w-full justify-center h-full px-6 ml-14 py-6">
+      <div className="flex flex-col items-center    w-full justify-center h-full lg:ml-0 md:ml-0 px-6 ml-14 py-6">
         <h1 className="text-2xl font-semibold text-gray-900 mb-6">
           Category List
         </h1>
@@ -201,7 +201,7 @@ const CategoryList = () => {
           <div className="w-full flex flex-col">
             <div className="overflow-x-auto w-full shadow-md rounded-lg border border-gray-200">
               <table className="table-auto w-full">
-                <thead className="bg-green-400">
+                <thead className="bg-purple-400">
                   <tr>
                     <th className="px-4 py-3 text-left text-gray-700 font-semibold">
                       Category Name
@@ -226,7 +226,7 @@ const CategoryList = () => {
                         <Button
                           onClick={() => handleOpenDialog(category)}
                           variant="ghost"
-                          className="text-green-600 hover:bg-green-100"
+                          className="text-purple-600 hover:bg-purple-100"
                         >
                           <MdEdit className="h-5 w-5" />
                         </Button>
@@ -251,7 +251,7 @@ const CategoryList = () => {
         )}
         <Button
           onClick={() => handleOpenDialog()}
-          className="mt-4 bg-green-500 text-white hover:bg-green-600"
+          className="mt-4 bg-purple-500 text-white hover:bg-purple-600"
         >
           <IoAddSharp className="h-6 text-black mr-2" />
           Add Category
@@ -285,7 +285,7 @@ const CategoryList = () => {
               </div>
 
               <DialogFooter>
-                <Button className="bg-green-500" type="submit">
+                <Button className="bg-purple-500" type="submit">
                   {editMode ? "Update Category" : "Add Category"}
                 </Button>
               </DialogFooter>

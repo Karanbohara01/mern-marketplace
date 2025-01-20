@@ -9,6 +9,7 @@ import ChatPage from "./components/ChatPage";
 import EditProfile from "./components/EditProfile";
 import Home from "./components/Home";
 import MainLayout from "./components/MainLayout";
+import ProtectedRoutes from "./components/ProctedRoutes";
 import Profile from "./components/Profile";
 import Login from "./components/ui/Login";
 import Signup from "./components/ui/Signup";
@@ -18,26 +19,54 @@ import { setSocket } from "./redux/socketSlice";
 const browserRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoutes>
+        <MainLayout />
+      </ProtectedRoutes>
+    ),
     children: [
-      { path: "/", element: <Home /> },
+      {
+        path: "/",
+        element: (
+          <ProtectedRoutes>
+            <Home />
+          </ProtectedRoutes>
+        ),
+      },
       {
         path: "/profile/:id",
-        element: <Profile />,
+        element: (
+          <ProtectedRoutes>
+            <Profile />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "/account/edit",
-        element: <EditProfile />,
+        element: (
+          <ProtectedRoutes>
+            {" "}
+            <EditProfile />
+          </ProtectedRoutes>
+        ),
       },
 
       {
         path: "/chat",
-        element: <ChatPage />,
+        element: (
+          <ProtectedRoutes>
+            <ChatPage />
+          </ProtectedRoutes>
+        ),
       },
 
       {
         path: "/category",
-        element: <CategoryList />,
+        element: (
+          <ProtectedRoutes>
+            <CategoryList />
+          </ProtectedRoutes>
+        ),
       },
     ],
   },
@@ -52,7 +81,11 @@ const browserRouter = createBrowserRouter([
   },
   {
     path: "/admin-dashboard",
-    element: <AdminDashboard />,
+    element: (
+      <ProtectedRoutes>
+        <AdminDashboard />
+      </ProtectedRoutes>
+    ),
   },
 ]);
 

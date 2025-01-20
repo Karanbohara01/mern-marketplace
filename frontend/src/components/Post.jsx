@@ -7,8 +7,6 @@ import { FaComments } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import CommentDialog from "./CommentDialog";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
 const Post = ({ post }) => {
   const [text, setText] = useState("");
@@ -18,7 +16,6 @@ const Post = ({ post }) => {
   const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
   const [postLike, setPostLike] = useState(post.likes.length);
   const [comment, setComment] = useState(post.comments);
-  const { selectedPost } = useSelector((store) => store.post);
   const dispatch = useDispatch();
 
   const changeEventHandler = (e) => {
@@ -37,13 +34,11 @@ const Post = ({ post }) => {
         `http://localhost:8000/api/v1/post/${post._id}/${action}`,
         { withCredentials: true }
       );
-      console.log(res.data);
       if (res.data.success) {
         const updatedLikes = liked ? postLike - 1 : postLike + 1;
         setPostLike(updatedLikes);
         setLiked(!liked);
 
-        // apne post ko update krunga
         const updatedPostData = posts.map((p) =>
           p._id === post._id
             ? {
@@ -56,36 +51,6 @@ const Post = ({ post }) => {
         );
         dispatch(setPosts(updatedPostData));
         toast.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const commentHandler = async () => {
-    try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/post/${post._id}/comment`,
-        { text },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      console.log(res.data);
-      if (res.data.success) {
-        const updatedCommentData = [...comment, res.data.comment];
-        setComment(updatedCommentData);
-
-        const updatedPostData = posts.map((p) =>
-          p._id === post._id ? { ...p, comments: updatedCommentData } : p
-        );
-
-        dispatch(setPosts(updatedPostData));
-        toast.success(res.data.message);
-        setText("");
       }
     } catch (error) {
       console.log(error);
@@ -124,126 +89,74 @@ const Post = ({ post }) => {
       console.log(error);
     }
   };
+
   return (
-    <div className="my-8    rounded-md    text-white w-full max-w-sm mx-auto">
-      <div className="flex items-center justify-end  ">
-        {/* <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src={post.author?.profilePicture} alt="post_image" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="flex items-center gap-3">
-            <h1>{post.author?.username}</h1>
-            {user?._id === post.author._id && (
-              <Badge variant="secondary">Author</Badge>
-            )}
-          </div>
-        </div> */}
-        <Dialog>
-          <DialogTrigger asChild></DialogTrigger>
-          <DialogContent className="flex flex-col items-center text-sm text-center">
-            {post?.author?._id !== user?._id && (
-              <Button
-                variant="ghost"
-                className="cursor-pointer w-fit text-[#ED4956] font-bold"
-              >
-                Unfollow
-              </Button>
-            )}
-
-            <Button variant="ghost" className="cursor-pointer w-fit">
-              Add to favorites
-            </Button>
-            {user && user?._id === post?.author?._id && (
-              <Button
-                onClick={deletePostHandler}
-                variant="ghost"
-                className="cursor-pointer w-fit"
-              >
-                Delete
-              </Button>
-            )}
-          </DialogContent>
-        </Dialog>
-      </div>
+    <div className="rounded-md   shadow-lg text-white w-full max-w-sm mx-auto p-4">
+      {/* Image Section */}
       <img
-        className="rounded-lg my-0 p-1 h-32  w-full aspect-square object-cover "
+        className="rounded-lg w-full h-48 object-cover mb-4"
         src={post.image}
-        alt="post_img"
+        alt={post.caption || "Product"}
       />
+      {/* Product Information */}
+      <h3 className="font-bold text-xl mb-2">
+        {post.caption || "Unnamed Product"}
+      </h3>
+      <p className="text-sm text-gray-100 mb-2 line-clamp-2">
+        {post.description}
+      </p>
+      <p className="flex items-center text-sm text-gray-100 mb-2">
+        <LocateIcon className="text-red-400 mr-2" />
+        {post.location || "Unknown location"}
+      </p>
+      {/* Price Section */}
+      <p className="text-lg font-semibold text-purple-600 mb-4">
+        {post.price > 0 ? `NPR.${post.price}` : "Price not available"}
+      </p>
+      {/* Actions Section */}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-4">
+          {/* Like Button */}
+          <AiFillLike
+            onClick={likeOrDislikeHandler}
+            size={24}
+            className={`cursor-pointer ${
+              liked ? "text-purple-600" : "hover:text-purple-600 text-gray-100"
+            }`}
+          />
+          <span>{postLike}</span>
 
-      <div className="flex items-center justify-between mx-2 my-2">
-        <div className="flex items-center gap-4">
-          {liked ? (
-            <AiFillLike
-              onClick={likeOrDislikeHandler}
-              size={"24"}
-              className="cursor-pointer text-red-600"
-            />
-          ) : (
-            <AiFillLike
-              onClick={likeOrDislikeHandler}
-              size={"22px"}
-              className="cursor-pointer hover:text-white"
-            />
-          )}
-
+          {/* Comment Button */}
           <FaComments
             onClick={() => {
               dispatch(setSelectedPost(post));
               setOpen(true);
             }}
-            className="cursor-pointer h-5 w-7 hover:text-white"
+            size={24}
+            className="cursor-pointer hover:text-gray-300 text-gray-100"
           />
-          {/* <Send className="cursor-pointer hover:text-white" /> */}
+          <span>{comment.length}</span>
         </div>
-        <div className="flex gap-2">
-          <Bookmark
-            onClick={bookmarkHandler}
-            className="cursor-pointer hover:text-white"
-          />
-          {/* <BookmarkMinusIcon /> */}
-          <span>Save</span>
-        </div>
+
+        {/* Bookmark Button */}
+        <Bookmark
+          onClick={bookmarkHandler}
+          className="cursor-pointer hover:text-gray-300 text-gray-100"
+        />
       </div>
-      {/* <span className="font-medium block mx-2 mb-2">{postLike} likes</span> */}
-      <p className="mx-2">
-        {/* <span className="font-medium mr-2">{post.author?.username}</span> */}
-        {post.caption}
-      </p>
-      <span className="mx-2 flex text-red-600 gap-2">
-        <LocateIcon className="text-red-400" />
-        Kathmandu
-      </span>
-      {/* <span className="mx-2 flex text-red-600 gap-2">
-        {post.category.map((cat) => (
-          <span className="text-white" key={cat._id}>
-            {cat.name}
-          </span>
-        ))}
-      </span> */}
-
-      <div className=" flex items-center mb-6 justify-start gap-4">
-        <div className=" w-32  flex items-center justify-center gap-2">
-          Price:
-          {post.price > 0 ? <span>{post.price}</span> : <span>n/a</span>}
-        </div>
-
-        {comment.length >= 0 && (
-          <span
-            onClick={() => {
-              dispatch(setSelectedPost(post));
-              setOpen(true);
-            }}
-            className="cursor-pointer text-sm text-white "
+      {/* Action Buttons */}
+      {/* {user?._id === post?.author?._id && (
+        <div className="flex justify-end mt-4 gap-2">
+          <Button
+            onClick={deletePostHandler}
+            className="bg-red-600 hover:bg-red-500 text-white text-sm"
           >
-            {/* View all {comment.length} comments */}
-            <Button className="bg-green-500 mr-4"> View Details</Button>
-          </span>
-        )}
-      </div>
-
-      <CommentDialog open={open} setOpen={setOpen} />
+            Delete
+          </Button>
+        </div>
+      )} */}
+      {/* Comment Dialog */}
+      <CommentDialog post={post} open={open} setOpen={setOpen} />
     </div>
   );
 };

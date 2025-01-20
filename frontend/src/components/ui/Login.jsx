@@ -1,7 +1,7 @@
 import { setAuthUser } from "@/redux/authSlice";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -53,11 +53,11 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/");
+  //   }
+  // }, []);
   return (
     <div className="flex items-center w-screen bg-gray-950 text-white  h-screen justify-center">
       <form

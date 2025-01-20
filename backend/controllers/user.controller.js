@@ -122,18 +122,50 @@ export const getProfile = async (req, res) => {
   }
 };
 
+// export const editProfile = async (req, res) => {
+
+//   try {
+//     const userId = req.id;
+//     const { bio, gender } = req.body;
+//     const profilePicture = req.file;
+//     let cloudResponse;
+
+//     if (profilePicture) {
+//       const fileUri = getDataUri(profilePicture);
+//       cloudResponse = await cloudinary.uploader.upload(fileUri);
+//     }
+
+//     const user = await User.findById(userId).select("-password");
+//     if (!user) {
+//       return res.status(404).json({
+//         message: "User not found.",
+//         success: false,
+//       });
+//     }
+//     if (bio) user.bio = bio;
+//     if (gender) user.gender = gender;
+//     if (profilePicture) user.profilePicture = cloudResponse.secure_url;
+
+//     await user.save();
+
+//     return res.status(200).json({
+//       message: "Profile updated.",
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const editProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const { bio, gender } = req.body;
+    const { bio, gender, username } = req.body;
     const profilePicture = req.file;
     let cloudResponse;
 
-    if (profilePicture) {
-      const fileUri = getDataUri(profilePicture);
-      cloudResponse = await cloudinary.uploader.upload(fileUri);
-    }
-
+    // Check if the user exists or not
     const user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(404).json({
@@ -141,7 +173,24 @@ export const editProfile = async (req, res) => {
         success: false,
       });
     }
+    // Check if the username is available or not
+    if (username && username !== user.username) {
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ message: "Username already taken", success: false });
+      }
+    }
+    // upload image if exists
+    if (profilePicture) {
+      const fileUri = getDataUri(profilePicture);
+      cloudResponse = await cloudinary.uploader.upload(fileUri);
+    }
+
+    // Update user fields only if they are present
     if (bio) user.bio = bio;
+    if (username) user.username = username;
     if (gender) user.gender = gender;
     if (profilePicture) user.profilePicture = cloudResponse.secure_url;
 
@@ -153,7 +202,28 @@ export const editProfile = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating profile:", error);
+    let message = "Internal server error";
+    if (error.name === "ValidationError") {
+      message = "Invalid Input Data";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.errors,
+      });
+    } else if (error.name === "CastError") {
+      message = "Invalid ID";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.message,
+      });
+    }
+    return res.status(500).json({
+      message,
+      success: false,
+      errors: error,
+    });
   }
 };
 export const getSuggestedUsers = async (req, res) => {

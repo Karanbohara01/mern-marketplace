@@ -1,75 +1,3 @@
-// import sharp from "sharp";
-// import { Comment } from "../models/comment.model.js";
-// import { Post } from "../models/post.model.js";
-// import { User } from "../models/user.model.js";
-// import { getReceiverSocketId, io } from "../socket/socket.js";
-// import cloudinary from "../utils/cloudinary.js";
-
-// export const addNewPost = async (req, res) => {
-//   try {
-//     // const { caption, description, price, category } = req.body;
-//     const { caption, description, price, category: categoryId } = req.body;
-
-//     const image = req.file;
-//     const authorId = req.id;
-
-//     // Validate required fields
-//     if (!image) return res.status(400).json({ message: "Image required" });
-//     if (!caption || !price || !description || !category) {
-//       return res.status(400).json({ message: "All fields are required" });
-//     }
-
-//     // Optimize and upload image
-//     const optimizedImageBuffer = await sharp(image.buffer)
-//       .resize({ width: 800, height: 800, fit: "inside" })
-//       .toFormat("jpeg", { quality: 80 })
-//       .toBuffer();
-
-//     const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString(
-//       "base64"
-//     )}`;
-//     const cloudResponse = await cloudinary.uploader.upload(fileUri);
-
-//     // Create post
-//     const post = await Post.create({
-//       caption,
-//       price,
-//       description,
-//       category: categoryId,
-//       image: cloudResponse.secure_url,
-//       author: authorId,
-//     });
-
-//     // Add post to user's posts
-//     const user = await User.findById(authorId);
-//     if (user) {
-//       user.posts.push(post._id);
-//       await user.save();
-//     }
-
-//     // Populate author field and category field
-//     // (await post.populate({ path: "author", select: "-password" })).populate({
-//     //   path: "category",
-//     // });
-
-//     await post.populate({ path: "author", select: "-password" });
-//     await post.populate({
-//       path: "category",
-//     });
-
-//     return res.status(201).json({
-//       message: "New post added",
-//       post,
-//       success: true,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res
-//       .status(500)
-//       .json({ message: "Internal server error", success: false });
-//   }
-// };
-
 import sharp from "sharp";
 import Category from "../models/category.model.js";
 import { Comment } from "../models/comment.model.js";
@@ -82,7 +10,13 @@ export const addNewPost = async (req, res) => {
   const _dummyCategoryForImport = Category;
 
   try {
-    const { caption, description, price, category: category } = req.body;
+    const {
+      caption,
+      description,
+      location,
+      price,
+      category: category,
+    } = req.body;
     const image = req.file;
     const authorId = req.id;
 
@@ -113,6 +47,7 @@ export const addNewPost = async (req, res) => {
       caption,
       price,
       description,
+      location,
       category: Array.isArray(category) ? category : [category], // Ensure category is an array
       image: cloudResponse.secure_url,
       author: authorId,
@@ -401,5 +336,88 @@ export const bookmarkPost = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updatePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const authorId = req.id;
+    const { caption, description, location, price } = req.body;
+    const image = req.file;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: "Post not found", success: false });
+    }
+
+    if (post.author.toString() !== authorId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: You are not the owner of this post" });
+    }
+
+    // Prepare the update object
+    const updateData = {
+      caption,
+      description,
+      location,
+      price,
+    };
+    // Optimize and upload image only if it's present
+    if (image) {
+      const optimizedImageBuffer = await sharp(image.buffer)
+        .resize({ width: 800, height: 800, fit: "inside" })
+        .toFormat("jpeg", { quality: 80 })
+        .toBuffer();
+
+      const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString(
+        "base64"
+      )}`;
+      const cloudResponse = await cloudinary.uploader.upload(fileUri);
+      updateData.image = cloudResponse.secure_url;
+    }
+
+    // Perform the update
+    const updatedPost = await Post.findByIdAndUpdate(postId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    // Populate author and category fields
+    await updatedPost.populate([
+      { path: "author", select: "-password" },
+      { path: "category" },
+    ]);
+
+    return res
+      .status(200)
+      .json({
+        message: "Post updated successfully",
+        post: updatedPost,
+        success: true,
+      });
+  } catch (error) {
+    console.error("Error updating post:", error);
+
+    let message = "Internal server error";
+    if (error.name === "ValidationError") {
+      message = "Invalid Input Data";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.errors,
+      });
+    } else if (error.name === "CastError") {
+      message = "Invalid ID";
+      return res.status(400).json({
+        message,
+        success: false,
+        errors: error.message,
+      });
+    }
+    return res.status(500).json({ message, success: false });
   }
 };

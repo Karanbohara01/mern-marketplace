@@ -25,7 +25,6 @@ const Posts = () => {
       {validPosts.map((post) => (
         <div key={post._id}>
           <Post post={post} />
-          
         </div>
       ))}
     </div>
