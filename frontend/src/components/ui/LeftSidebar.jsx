@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { setAuthUser } from "@/redux/authSlice";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+import { BiSolidCategory } from "react-icons/bi";
 import { FaMessage } from "react-icons/fa6";
 import { IoLogOut, IoNotifications } from "react-icons/io5";
 import { MdAddBox } from "react-icons/md";
@@ -10,7 +11,7 @@ import logo from "../../assets/koselie-logo.jpg";
 
 import axios from "axios";
 import { Menu, SearchIcon, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,12 +26,30 @@ const LeftSidebar = () => {
   const { likeNotification } = useSelector(
     (store) => store.realTimeNotification
   );
-
+  const [allCategory, setAllCategory] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false); // state for category dropdown
   const isLoggedIn = !!user; // Corrected condition
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get("http://localhost:8000/api/v1/category");
+        setAllCategory(res.data);
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategory();
+  }, []);
 
   const logoutHandler = async () => {
     try {
@@ -61,11 +80,17 @@ const LeftSidebar = () => {
     } else if (textType === "Messages") {
       navigate("/chat");
     } else if (textType === "Categories") {
-      navigate("/category");
+      setCategoryDropdownOpen(!categoryDropdownOpen); // Handle category dropdown toggling
     } else if (textType === "View Profile") {
       navigate(`/profile/${user?._id}`);
     }
   };
+
+  const handleCategorySelect = (categoryName) => {
+    navigate(`/category/${categoryName}`);
+    setCategoryDropdownOpen(false);
+  };
+
   const profileDropdownItems = [
     {
       icon: (
@@ -90,11 +115,10 @@ const LeftSidebar = () => {
       icon: <MdAddBox className="text-black w-7 h-6" />,
       text: "Post",
     },
-
-    // {
-    //   icon: <BiSolidCategory className="text-black w-7 h-7" />,
-    //   text: "Categories",
-    // },
+    {
+      icon: <BiSolidCategory className="text-black w-7 h-7" />,
+      text: "Categories",
+    },
   ];
 
   return (
@@ -133,12 +157,27 @@ const LeftSidebar = () => {
                   <div
                     key={index}
                     onClick={() => sidebarHandler(item.text)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-200"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-200 relative"
                   >
                     <div className="text-lg text-blue-300">{item.icon}</div>
                     <span className="hidden lg:block font-medium text-black">
                       {item.text}
                     </span>
+                    {item.text === "Categories" && categoryDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-2 bg-white rounded-md shadow-lg border border-gray-200 z-50 w-48">
+                        {allCategory?.categories?.map((cat) => (
+                          <div
+                            key={cat._id}
+                            onClick={() => handleCategorySelect(cat?.name)}
+                            className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <span className="text-sm text-gray-800">
+                              {cat?.name}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
 
@@ -220,7 +259,7 @@ const LeftSidebar = () => {
                 <div
                   key={index}
                   onClick={() => sidebarHandler(item.text)}
-                  className="flex text-white items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-200"
+                  className="flex items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-200 relative"
                 >
                   <div className="text-lg text-blue-300">{item.icon}</div>
                   <span className="font-medium text-white">{item.text}</span>
@@ -266,6 +305,21 @@ const LeftSidebar = () => {
                         </PopoverContent>
                       </Popover>
                     )}
+                  {item.text === "Categories" && categoryDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-2 bg-purple-400 rounded-md shadow-lg border border-gray-200 z-50 w-full">
+                      {allCategory?.categories?.map((cat) => (
+                        <div
+                          key={cat._id}
+                          onClick={() => handleCategorySelect(cat?.name)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          <span className="text-sm text-gray-800">
+                            {cat?.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
 

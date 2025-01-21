@@ -278,7 +278,7 @@ const Profile = () => {
                 <Link to="/account/edit">
                   <Button
                     variant="secondary"
-                    className="h-8 bg-purple-600 text-sm"
+                    className="h-8 text-white bg-purple-600 text-sm"
                   >
                     Edit Profile
                   </Button>

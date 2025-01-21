@@ -91,7 +91,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="rounded-md   shadow-lg text-white w-full max-w-sm mx-auto p-4">
+    <div className="rounded-md hover:border border-purple-600  shadow-lg text-white w-full max-w-sm mx-auto p-4">
       {/* Image Section */}
       <img
         className="rounded-lg w-full h-48 object-cover mb-4"

@@ -1,9 +1,7 @@
-import { MenuIcon, User, XIcon } from "lucide-react";
+import { MenuIcon, User } from "lucide-react";
 import { useState } from "react";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { MdManageAccounts } from "react-icons/md";
-import { Link } from "react-router-dom";
-
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,37 +21,6 @@ const AdminDashboard = () => {
   return (
     <div className="flex h-screen  dark:bg-gray-900">
       {/* Sidebar */}
-      <div
-        className={`fixed font-bold inset-y-0 left-0 transform bg-green-400 dark:bg-gray-800 shadow-md w-64 transition-transform duration-300 z-20 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
-      >
-        <div className="flex items-center justify-between px-4 py-4 border-b dark:border-gray-700">
-          <span className="text-2xl font-bold text-gray-800 dark:text-white">
-            Admin Panel
-          </span>
-          <button
-            className="md:hidden text-gray-700 dark:text-white focus:outline-none"
-            onClick={toggleSidebar}
-          >
-            <XIcon className="w-6 h-6" />
-          </button>
-        </div>
-        <nav className="mt-6">
-          <ul>
-            {navItems.map((item) => (
-              <li key={item.label} className="mb-2">
-                <Link
-                  to={item.href}
-                  className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
 
       {/* Content Area */}
       <div className="flex flex-col flex-1">
