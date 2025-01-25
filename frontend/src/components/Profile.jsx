@@ -62,14 +62,14 @@
 //                 <div className="flex items-center gap-2">
 //                   <Heart
 //                     size={16}
-//                     className="hover:text-gray-700 transition-colors"
+//                     className="hover:text-gray-800 transition-colors"
 //                   />
 //                   <span>{post?.likes.length}</span>
 //                 </div>
 //                 <div className="flex items-center gap-2">
 //                   <MessageCircle
 //                     size={16}
-//                     className="hover:text-gray-700 transition-colors"
+//                     className="hover:text-gray-800 transition-colors"
 //                   />
 //                   <span>{post?.comments.length}</span>
 //                 </div>
@@ -138,7 +138,7 @@
 //           <CardContent className="p-4 space-y-2">
 //             <p className="flex items-center">
 //               <span className="font-bold text-base">Listings</span>
-//               <span className="font-semibold text-gray-700 p-2">
+//               <span className="font-semibold text-gray-800 p-2">
 //                 ({userProfile?.posts?.length || 0})
 //               </span>
 //             </p>
@@ -300,7 +300,7 @@ const Profile = () => {
                 className={`py-3 cursor-pointer ${
                   activeTab === "listings"
                     ? "font-bold border-b-2 border-blue-600"
-                    : "text-gray-700"
+                    : "text-gray-800"
                 }`}
                 onClick={() => handleTabChange("listings")}
               >
@@ -311,7 +311,7 @@ const Profile = () => {
                   className={`py-3 cursor-pointer ${
                     activeTab === "archived"
                       ? "font-bold border-b-2 border-blue-600"
-                      : "text-gray-700"
+                      : "text-gray-800"
                   }`}
                   onClick={() => handleTabChange("archived")}
                 >

@@ -65,7 +65,7 @@ const Header = () => {
             <button
               onClick={toggleMenu}
               type="button"
-              className="focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 dark:text-white"
+              className="focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-white"
               aria-label="Toggle Menu"
             >
               {isMenuOpen ? (
@@ -84,7 +84,7 @@ const Header = () => {
                 className={`py-2 px-3 rounded-md transition-colors duration-200 ${
                   location.pathname === item.href
                     ? "text-blue-500 dark:text-blue-400 font-semibold"
-                    : "text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400"
+                    : "text-gray-800 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400"
                 }`}
               >
                 {item.label}
@@ -105,7 +105,7 @@ const Header = () => {
               className={`block py-2 px-3 rounded-md transition-colors duration-200 ${
                 location.pathname === item.href
                   ? "text-blue-500 dark:text-blue-400 font-semibold"
-                  : "text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400"
+                  : "text-gray-800 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400"
               }`}
             >
               {item.label}

@@ -175,7 +175,7 @@ const CategoryList = () => {
             </div>
           </div>
           {/* Loading Text */}
-          <p className="text-lg font-medium text-gray-700 animate-pulse">
+          <p className="text-lg font-medium text-gray-800 animate-pulse">
             Loading, please wait...
           </p>
         </div>
@@ -203,14 +203,14 @@ const CategoryList = () => {
               <table className="table-auto w-full">
                 <thead className="bg-purple-400">
                   <tr>
-                    <th className="px-4 py-3 text-left text-gray-700 font-semibold">
+                    <th className="px-4 py-3 text-left text-gray-800 font-semibold">
                       Category Name
                     </th>
 
-                    <th className="px-4 py-3 text-left text-gray-700 font-semibold">
+                    <th className="px-4 py-3 text-left text-gray-800 font-semibold">
                       Edit
                     </th>
-                    <th className="px-4 py-3 text-left text-gray-700 font-semibold">
+                    <th className="px-4 py-3 text-left text-gray-800 font-semibold">
                       Delete
                     </th>
                   </tr>
@@ -272,7 +272,7 @@ const CategoryList = () => {
               <div className="grid gap-2">
                 <label
                   htmlFor="name"
-                  className="text-right text-sm font-medium text-gray-700"
+                  className="text-right text-sm font-medium text-gray-800"
                 ></label>
                 <Input
                   type="text"

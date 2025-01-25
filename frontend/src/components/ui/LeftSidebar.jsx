@@ -80,7 +80,7 @@ const LeftSidebar = () => {
     } else if (textType === "Messages") {
       navigate("/chat");
     } else if (textType === "Categories") {
-      setCategoryDropdownOpen(!categoryDropdownOpen); // Handle category dropdown toggling
+      navigate("/categorybar");
     } else if (textType === "View Profile") {
       navigate(`/profile/${user?._id}`);
     }
@@ -124,13 +124,13 @@ const LeftSidebar = () => {
   return (
     <div>
       {/* Header for md and lg screens */}
-      <div className="hidden md:flex fixed top-0 left-0 z-10 w-full bg-gradient-to-b from-purple-500 to-purple-600 text-black shadow-lg">
+      <div className="hidden md:flex fixed top-0 left-0 z-10 w-full bg-gradient-to-b from-white to-white text-black shadow-lg">
         <div className="flex items-center  w-full px-4 py-3 gap-2">
           {/* Left Section (Logo and Koselie) */}
           <Link to={"/"}>
             <div className="flex-1 flex items-center w-80 justify-center">
-              <img className="h-10 w-10 rounded-full" src={logo} alt="" />
-              <span className="ml-2 font-bold text-transparent bg-gradient-to-r from-yellow-500 via-pink-500 to-white bg-clip-text">
+              <img className="h-12 w-12 rounded-full" src={logo} alt="" />
+              <span className="ml-2 font-bold text-transparent bg-gradient-to-r from-yellow-500 via-pink-500 to-blue-700 bg-clip-text">
                 Koselie
               </span>
             </div>
@@ -139,10 +139,10 @@ const LeftSidebar = () => {
           {/* Middle Section (Google-Like Search Bar) */}
           <div className="flex flex-1 items-center justify-end">
             <div className="flex items-center w-4/5 bg-white border border-gray-300 shadow-md rounded-md px-6 py-3">
-              <SearchIcon className="text-gray-500 text-xl" />
+              <SearchIcon className="text-gray-90 text-xl" />
               <input
                 type="text"
-                className="flex-1 bg-transparent text-gray-700 placeholder-gray-400 text-sm focus:outline-none px-3"
+                className="flex-1 bg-transparent text-gray-800 placeholder-gray-400 text-sm focus:outline-none px-3"
                 placeholder="Search..."
               />
             </div>
@@ -234,11 +234,11 @@ const LeftSidebar = () => {
       </div>
 
       {/* Sidebar for smaller screens */}
-      <div className="fixed left-0 z-10 h-screen bg-gradient-to-b from-purple-500 to-purple-600 text-white shadow-lg md:hidden">
+      <div className="fixed left-0 z-10 h-screen bg-gradient-to-b from-white to-white text-black shadow-lg md:hidden">
         <div className="flex items-center justify-center p-4">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white hover:text-black"
+            className="text-black hover:text-black"
           >
             {menuOpen ? (
               <X className="text-black" size={28} />
@@ -251,7 +251,7 @@ const LeftSidebar = () => {
         <div
           className={`${
             menuOpen ? "block" : "hidden"
-          } h-full overflow-y-auto border-r border-gray-700`}
+          } h-full overflow-y-auto border-r border-gray-800`}
         >
           <div className="flex flex-col items-center px-4 pt-6">
             {isLoggedIn &&
@@ -262,7 +262,7 @@ const LeftSidebar = () => {
                   className="flex items-center gap-4 p-3 my-2 w-full rounded-lg transition-all duration-200 cursor-pointer hover:bg-gray-200 relative"
                 >
                   <div className="text-lg text-blue-300">{item.icon}</div>
-                  <span className="font-medium text-white">{item.text}</span>
+                  <span className="font-medium text-black">{item.text}</span>
                   {item.text === "Notifications" &&
                     likeNotification.length > 0 && (
                       <Popover>
@@ -282,7 +282,7 @@ const LeftSidebar = () => {
                               likeNotification.map((notification) => (
                                 <div
                                   key={notification.userId}
-                                  className="flex items-center gap-3 my-2 p-2 bg-gray-700 rounded-lg"
+                                  className="flex items-center gap-3 my-2 p-2 bg-gray-800 rounded-lg"
                                 >
                                   <Avatar>
                                     <AvatarImage
@@ -293,7 +293,7 @@ const LeftSidebar = () => {
                                     <AvatarFallback>CN</AvatarFallback>
                                   </Avatar>
                                   <p className="text-sm">
-                                    <span className="font-semibold text-white">
+                                    <span className="font-semibold text-black">
                                       {notification.userDetails?.username}
                                     </span>{" "}
                                     liked your post
@@ -332,10 +332,13 @@ const LeftSidebar = () => {
                   <div className="text-lg text-blue-300">
                     <Avatar className="w-6 h-6">
                       <AvatarImage src={user?.profilePicture} alt="abc" />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarFallback>
+                        {" "}
+                        {user?.username?.[0]?.toUpperCase() || "U"}
+                      </AvatarFallback>
                     </Avatar>
                   </div>
-                  <span className="font-medium text-white">
+                  <span className="font-medium text-black">
                     {user?.username}
                   </span>
                 </div>

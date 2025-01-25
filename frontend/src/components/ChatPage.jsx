@@ -49,9 +49,9 @@ const ChatPage = () => {
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       {/* Sidebar */}
-      <section className="lg:w-1/4 md:w-1/3 w-full flex flex-col border-r border-gray-700 bg-gray-950 relative">
+      <section className="lg:w-1/4 md:w-1/3 w-full flex flex-col border-r border-gray-800 bg-gray-800 relative">
         {/* Logo and Title */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
           <h1 className="text-lg font-bold text-center  min-w-full mt-20">
             Koselie Chat
           </h1>
@@ -71,7 +71,7 @@ const ChatPage = () => {
               <div
                 key={suggestedUser?._id}
                 onClick={() => dispatch(setSelectedUser(suggestedUser))}
-                className="flex items-center p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition duration-300 cursor-pointer"
+                className="flex items-center p-2 rounded-lg bg-gray-800 hover:bg-gray-800 transition duration-300 cursor-pointer"
               >
                 <Avatar className="w-10 h-10 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-700">
                   <AvatarImage
@@ -103,7 +103,7 @@ const ChatPage = () => {
         {selectedUser ? (
           <>
             {/* Chat Header */}
-            <div className="flex items-center px-4 py-3 border-b border-gray-700 bg-gray-900">
+            <div className="flex items-center px-4 py-3 border-b border-gray-800 bg-gray-900">
               <Avatar className="w-10 h-10">
                 <AvatarImage src={selectedUser?.profilePicture} alt="Profile" />
                 <AvatarFallback>{selectedUser?.username[0]}</AvatarFallback>
@@ -121,12 +121,12 @@ const ChatPage = () => {
             </div>
 
             {/* Input Section */}
-            <div className="flex items-center px-4 py-3 border-t border-gray-700 bg-gray-900">
+            <div className="flex items-center px-4 py-3 border-t border-gray-800 bg-gray-900">
               <Input
                 value={textMessage}
                 onChange={(e) => setTextMessage(e.target.value)}
                 type="text"
-                className="flex-1 bg-gray-700 text-white p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="flex-1 bg-gray-800 text-white p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="Type a message..."
               />
               <Button

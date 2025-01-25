@@ -59,7 +59,7 @@ const Login = () => {
   //   }
   // }, []);
   return (
-    <div className="flex items-center w-screen bg-gray-950 text-white  h-screen justify-center">
+    <div className="flex items-center w-screen bg-gray-800 text-white  h-screen justify-center">
       <form
         onSubmit={signupHandler}
         className="shadow-lg flex border-white border rounded-sm flex-col gap-5 p-8"

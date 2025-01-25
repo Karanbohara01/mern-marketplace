@@ -8,8 +8,8 @@ const Home = () => {
   useGetSuggestedUsers();
   return (
     <>
-      <div className="flex items-center flex-col bg-gray-950">
-        <div className="flex bg-gray-950">
+      <div className="flex items-center flex-col bg-gray-500">
+        <div className="flex bg-gray-300">
           <div className="flex-grow ">
             <Feed />
             <Outlet />

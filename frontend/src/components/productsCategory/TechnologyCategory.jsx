@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const ClothesCategory = () => {
+const TechnologyCategory = () => {
   const { posts } = useSelector((store) => store.post);
 
   // Convert posts object to an array
@@ -10,7 +10,7 @@ const ClothesCategory = () => {
 
   // Filter posts with the "grocery" category (case-insensitive)
   const groceryPosts = postsArray.filter((post) =>
-    post?.category?.some((cat) => cat.name.toLowerCase() === "clothes")
+    post?.category?.some((cat) => cat.name.toLowerCase() === "technology")
   );
 
   console.log("Filtered Grocery Posts:", groceryPosts); // Debug: Check if filtering works
@@ -20,6 +20,11 @@ const ClothesCategory = () => {
       <div className="flex-1 lg:my-20 lg:w-full md:w-full md:my-20 px-8 sm:mx-20 md:px-16">
         {groceryPosts.length > 0 ? (
           <div className="mb-5">
+            {/* <h2 className="text-3xl font-semibold mb-3 flex items-center w-full p-2 text-white">
+              Techology and electronics
+            </h2> */}
+            {/* <hr className="mb-5" /> */}
+
             {/* Grid layout for products */}
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 overflow-x-auto pb-3 p-2">
               {groceryPosts.map((post) => (
@@ -64,4 +69,4 @@ const ClothesCategory = () => {
   );
 };
 
-export default ClothesCategory;
+export default TechnologyCategory;
