@@ -36,15 +36,8 @@ router
 router.route("/suggested").get(isAuthenticated, getSuggestedUsers);
 router.route("/followorunfollow/:id").post(isAuthenticated, followOrUnfollow);
 router.delete("/users/:id", deleteUser); // Removed isAdmin middleware
-router.post("/forgetPassword", (req, res) => {
-  console.log("Forget password route hit");
-  forgetPassword(req, res);
-});
-
-router.post("/reset-password/:token", (req, res) => {
-  console.log("Received reset request with token:", req.params.token);
-  resetPassword(req, res);
-});
+router.post("/forgetPassword", forgetPassword); // Direct controller assignment
+router.post("/reset-password/:token", resetPassword);
 
 // Add the new verification route
 router.route("/verify/:token").get(verifyEmail);

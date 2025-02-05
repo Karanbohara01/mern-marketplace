@@ -1,31 +1,31 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
-  {
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    role: {
-      type: String,
-      enum: ["user", "admin"], // <-- Correct enum definition
-      default: "user", // <-- Good practice: provide a default value
-    },
-    password: { type: String, required: true },
-    profilePicture: {
-      type: String,
-      default: null,
-    },
-    bio: { type: String, default: "" },
-    gender: { type: String, enum: ["male", "female", "others"] },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
-    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
-    isVerified: { type: Boolean, default: false },
-    verificationToken: { type: String, default: null },
-  },
-  { timestamps: true }
-);
-export const User = mongoose.model("User", userSchema);
+// const userSchema = new mongoose.Schema(
+//   {
+//     username: { type: String, required: true, unique: true },
+//     email: { type: String, required: true, unique: true },
+//     role: {
+//       type: String,
+//       enum: ["user", "admin"], // <-- Correct enum definition
+//       default: "user", // <-- Good practice: provide a default value
+//     },
+//     password: { type: String, required: true },
+//     profilePicture: {
+//       type: String,
+//       default: null,
+//     },
+//     bio: { type: String, default: "" },
+//     gender: { type: String, enum: ["male", "female", "others"] },
+//     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+//     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+//     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+//     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+//     isVerified: { type: Boolean, default: false },
+//     verificationToken: { type: String, default: null },
+//   },
+//   { timestamps: true }
+// );
+// export const User = mongoose.model("User", userSchema);
 
 // import bcrypt from "bcryptjs";
 // import crypto from "crypto";
@@ -90,3 +90,38 @@ export const User = mongoose.model("User", userSchema);
 
 // // Export the model using ES6 export syntax
 // export default mongoose.model("User", userSchema);
+
+// **************************************************************//
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    password: { type: String, required: true },
+    profilePicture: {
+      type: String,
+      default: null,
+    },
+    bio: { type: String, default: "" },
+    gender: { type: String, enum: ["male", "female", "others"] },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    isVerified: { type: Boolean, default: false },
+    verificationToken: { type: String, default: null },
+
+    // Add fields for password reset functionality
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
+  },
+  { timestamps: true }
+);
+
+export const User = mongoose.model("User", userSchema);

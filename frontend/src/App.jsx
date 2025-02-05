@@ -203,7 +203,7 @@ import "./App.css";
 import CategoryList from "./components/CategoryList";
 import ChatPage from "./components/ChatPage";
 import EditProfile from "./components/EditProfile";
-import ForgetPassword from "./components/ForgotPassword";
+import ForgotPassword from "./components/ForgotPassword";
 import Home from "./components/Home";
 import MainLayout from "./components/MainLayout";
 import PostChatPage from "./components/PostChatPage";
@@ -300,15 +300,14 @@ const browserRouter = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
-  {
-    path: "/forgot-password",
-    element: <ForgetPassword />,
-  },
-  { path: "/reset-password/:resetToken", element: <ResetPassword /> },
+
   {
     path: "/verify/:token",
     element: <VerifyEmail />,
   },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+
+  { path: "/reset-password/:token", element: <ResetPassword /> },
 
   {
     path: "/grocery",

@@ -1188,6 +1188,9 @@ export const deleteUser = async (req, res) => {
 //   }
 // };
 
+// forget password
+
+// forget password
 export const forgetPassword = async (req, res) => {
   try {
     console.log(`Password reset request received for email: ${req.body.email}`);
@@ -1237,26 +1240,37 @@ export const forgetPassword = async (req, res) => {
     };
 
     // Send the email
-    await transporter.sendMail(mailOptions);
-    console.log(`Password reset email sent to ${req.body.email}`);
-    res.status(200).send({ message: "Password reset email sent successfully" }); // Updated message
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Password reset email sent to ${req.body.email}`);
+      res
+        .status(200)
+        .send({ message: "Password reset email sent successfully" });
+    } catch (emailError) {
+      console.error("Error sending password reset email:", emailError);
+      res.status(500).send({ message: "Failed to send password reset email" });
+    }
   } catch (err) {
     console.error("Error in forgetPassword:", err); // Log the full error object
     res
       .status(500)
-      .send({ message: "Internal server error", error: err.message }); // Return the specific error message
+      .send({ message: "Internal server error", error: err.message });
   }
 };
 
+// reset password
 export const resetPassword = async (req, res) => {
   try {
-    const { token } = req.params; // Get the token from URL params
-    const { newPassword } = req.body; // Get the new password from the request body
+    const { token } = req.params; // Extract token from URL
+    const { newPassword } = req.body; // Extract new password from request body
 
-    // Find the user by the *hashed* reset token and expiry
+    if (!token) {
+      return res.status(400).json({ message: "Token is missing" });
+    }
+
+    // Find user by token and check expiration
     const user = await User.findOne({
-      resetPasswordToken: { $exists: true }, // Ensure the field exists
-
+      resetPasswordToken: { $exists: true },
       resetPasswordExpires: { $gt: Date.now() },
     });
 
@@ -1265,21 +1279,35 @@ export const resetPassword = async (req, res) => {
         .status(400)
         .json({ message: "Invalid or expired reset token" });
     }
-    const isMatch = await bcrypt.compare(token, user.resetPasswordToken);
 
+    // Compare provided token with hashed token
+    const isMatch = await bcrypt.compare(token, user.resetPasswordToken);
     if (!isMatch) {
       return res
         .status(400)
         .json({ message: "Invalid or expired reset token" });
     }
+
+    // Check if password is strong enough
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Password must be at least 8 characters long and contain a number and a special character.",
+        });
+    }
+
     // Hash the new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    // Update the user's password and reset token fields
+    // Update user's password and clear token fields
     user.password = hashedPassword;
-    user.resetPasswordToken = null; // Clear the token
-    user.resetPasswordExpires = null; // Clear the expiration
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
     await user.save();
 
     res.status(200).json({ message: "Password reset successfully" });
