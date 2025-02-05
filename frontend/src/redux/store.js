@@ -10,6 +10,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./authSlice";
+import categorySlice from "./categorySlice";
 import chatSlice from "./chatSlice";
 import postSlice from "./postSlice";
 import rtnSlice from "./rtnSlice";
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   auth: authSlice,
   post: postSlice,
   chat: chatSlice,
+  category: categorySlice,
   socketio: socketSlice,
   realTimeNotification: rtnSlice,
 });

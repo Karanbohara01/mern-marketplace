@@ -96,7 +96,10 @@ const LeftSidebar = () => {
       icon: (
         <Avatar className="w-6 h-6">
           <AvatarImage src={user?.profilePicture} alt="abc" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>
+            {" "}
+            {user?.username?.[0]?.toUpperCase() || "U"}
+          </AvatarFallback>
         </Avatar>
       ),
       text: "View Profile",

@@ -21,7 +21,7 @@ const Posts = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 mr-10 tex-white   sm:grid-cols-1  lg:grid-cols-4 gap-6 p-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 mr-10 tex-white   sm:grid-cols-1  lg:grid-cols-4 gap-6 p-6">
       {validPosts.map((post) => (
         <div key={post._id}>
           <Post post={post} />

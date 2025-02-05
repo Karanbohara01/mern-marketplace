@@ -7,6 +7,7 @@ const MainLayout = () => {
       {/* <Header /> */}
       <LeftSidebar />
       {/* <Sidebar /> */}
+
       <div>
         <Outlet />
       </div>
