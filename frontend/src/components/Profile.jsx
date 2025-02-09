@@ -278,13 +278,13 @@ const Profile = () => {
                 <Link to="/account/edit">
                   <Button
                     variant="secondary"
-                    className="h-8 text-white  hover:bg-green-600 bg-green-500 text-sm"
+                    className="h-8 text-white  hover:bg-black bg-black text-sm"
                   >
                     Edit Profile
                   </Button>
                 </Link>
               ) : (
-                <Button className="bg-green-600 hover:bg-green-700 h-8 text-sm">
+                <Button className="bg-black hover:bg-gary-700 h-8 text-sm">
                   Contact Seller
                 </Button>
               )}
@@ -322,7 +322,7 @@ const Profile = () => {
 
             {isLoggedInUserProfile && (
               <Link to="/listings/new">
-                <Button className="bg-green-500 hover:bg-green-600">
+                <Button className="bg-black hover:bg-gray-600">
                   Add New Listing
                 </Button>
               </Link>
