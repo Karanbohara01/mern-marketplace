@@ -20,7 +20,7 @@ const GroceryCategory = () => {
       <div className="flex-1 lg:my-20 lg:w-full md:w-full md:my-20 px-8 sm:mx-20 md:px-16">
         {groceryPosts.length > 0 ? (
           <div className="mb-5">
-            <h2 className="text-3xl font-semibold mb-3 flex items-center w-full p-2 text-white">
+            <h2 className="text-3xl font-semibold mb-3 flex items-center w-full p-2 text-black">
               Grocery & Essentials
             </h2>
             {/* <hr className="mb-5" /> */}
