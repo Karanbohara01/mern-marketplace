@@ -1,614 +1,3 @@
-// // import cloudinary from "../utils/cloudinary.js";
-// // import getDataUri from "../utils/datauri.js";
-
-// // // // Function to send verification email
-// // // const sendVerificationEmail = async (user, verificationToken) => {
-// // //   const transporter = nodemailer.createTransport({
-// // //     host: process.env.MAILTRAP_HOST,
-// // //     port: process.env.MAILTRAP_PORT,
-// // //     auth: {
-// // //       user: process.env.MAILTRAP_USER,
-// // //       pass: process.env.MAILTRAP_PASS,
-// // //     },
-// // //   });
-
-// // //   const verificationLink = `${process.env.URL}/verify/${verificationToken}`;
-
-// // //   const mailOptions = {
-// // //     from: process.env.MAILTRAP_USER,
-// // //     to: user.email,
-// // //     subject: "Verify Your Email",
-// // //     html: `<p>Please click the following link to verify your email: <a href="${verificationLink}">${verificationLink}</a></p>`,
-// // //   };
-// // //   try {
-// // //     await transporter.sendMail(mailOptions);
-// // //   } catch (error) {
-// // //     console.error("Error sending verification email:", error);
-// // //     throw new Error("Error sending verification email");
-// // //   }
-// // // };
-
-// // // export const register = async (req, res) => {
-// // //   try {
-// // //     const { username, email, password } = req.body;
-// // //     if (!username || !email || !password) {
-// // //       return res.status(401).json({
-// // //         message: "Something is missing, please check!",
-// // //         success: false,
-// // //       });
-// // //     }
-// // //     const user = await User.findOne({ email });
-// // //     if (user) {
-// // //       return res.status(401).json({
-// // //         message: "Try different email",
-// // //         success: false,
-// // //       });
-// // //     }
-// // //     const hashedPassword = await bcrypt.hash(password, 10);
-// // //     // Generate a unique verification token
-// // //     const verificationToken = crypto.randomBytes(20).toString("hex");
-// // //     console.log("Generated verification token:", verificationToken); // Log the generated token
-// // //     const newUser = await User.create({
-// // //       username,
-// // //       email,
-// // //       password: hashedPassword,
-// // //       verificationToken: verificationToken,
-// // //     });
-// // //     // Send verification email
-// // //     try {
-// // //       await sendVerificationEmail(newUser, verificationToken);
-// // //     } catch (error) {
-// // //       console.error("Error sending verification email:", error);
-// // //       return res.status(500).json({
-// // //         message: "Email sending failed",
-// // //         success: false,
-// // //         error: error.message,
-// // //       });
-// // //     }
-
-// // //     return res.status(201).json({
-// // //       message: "Account created successfully. Please verify your email.",
-// // //       success: true,
-// // //     });
-// // //   } catch (error) {
-// // //     console.error("Error during registration:", error);
-// // //     return res.status(500).json({
-// // //       message: "Registration failed",
-// // //       success: false,
-// // //       error: error.message,
-// // //     });
-// // //   }
-// // // };
-
-// // import bcrypt from "bcryptjs";
-// // import jwt from "jsonwebtoken";
-// // import path from "path";
-// // import { Post } from "../models/post.model.js";
-// // import { User } from "../models/user.model.js";
-
-// // import { fileURLToPath } from "url";
-
-// // const __filename = fileURLToPath(import.meta.url);
-// // const __dirname = path.dirname(__filename);
-
-// // // Function to send verification email
-// // // const sendVerificationEmail = async (user, verificationToken) => {
-// // //   const transporter = nodemailer.createTransport({
-// // //     host: process.env.MAILTRAP_HOST,
-// // //     port: process.env.MAILTRAP_PORT,
-// // //     auth: {
-// // //       user: process.env.MAILTRAP_USER,
-// // //       pass: process.env.MAILTRAP_PASS,
-// // //     },
-// // //   });
-
-// // //   const verificationLink = `${process.env.URL}/verify/${verificationToken}`;
-
-// // //   const mailOptions = {
-// // //     from: process.env.MAILTRAP_USER,
-// // //     to: user.email,
-// // //     subject: "Verify Your Email",
-// // //     html: `<p>Please click the following link to verify your email: <a href="${verificationLink}">${verificationLink}</a></p>`,
-// // //   };
-// // //   try {
-// // //     await transporter.sendMail(mailOptions);
-// // //   } catch (error) {
-// // //     console.error("Error sending verification email:", error);
-// // //     throw new Error("Error sending verification email");
-// // //   }
-// // // };
-
-// // // export const register = async (req, res) => {
-// // //   try {
-// // //     const { username, email, password } = req.body;
-// // //     if (!username || !email || !password) {
-// // //       return res.status(401).json({
-// // //         message: "Something is missing, please check!",
-// // //         success: false,
-// // //       });
-// // //     }
-// // //     const user = await User.findOne({ email });
-// // //     if (user) {
-// // //       return res.status(401).json({
-// // //         message: "Try different email",
-// // //         success: false,
-// // //       });
-// // //     }
-
-// // //     // 1. Handle Profile Picture Upload
-// // //     let profilePictureUrl = "";
-
-// // //     // Apply the upload middleware (multer)
-// // //     await new Promise((resolve, reject) => {
-// // //       upload.single("profilePicture")(req, res, (err) => {
-// // //         if (err) {
-// // //           console.error("Error uploading profile picture:", err);
-// // //           return reject(err);
-// // //         }
-// // //         resolve();
-// // //       });
-// // //     });
-
-// // //     if (req.file) {
-// // //       const fileUrl = path.join("/uploads", req.file.filename); // Store only the URL
-// // //       profilePictureUrl = fileUrl;
-// // //     }
-
-// // //     const hashedPassword = await bcrypt.hash(password, 10);
-// // //     // Generate a unique verification token
-// // //     const verificationToken = crypto.randomBytes(20).toString("hex");
-// // //     console.log("Generated verification token:", verificationToken); // Log the generated token
-// // //     const newUser = await User.create({
-// // //       username,
-// // //       email,
-// // //       password: hashedPassword,
-// // //       verificationToken: verificationToken,
-// // //       profilePicture: profilePictureUrl,
-// // //     });
-// // //     // Send verification email
-// // //     try {
-// // //       await sendVerificationEmail(newUser, verificationToken);
-// // //     } catch (error) {
-// // //       console.error("Error sending verification email:", error);
-// // //       return res.status(500).json({
-// // //         message: "Email sending failed",
-// // //         success: false,
-// // //         error: error.message,
-// // //       });
-// // //     }
-
-// // //     return res.status(201).json({
-// // //       message: "Account created successfully. Please verify your email.",
-// // //       success: true,
-// // //     });
-// // //   } catch (error) {
-// // //     console.error("Error during registration:", error);
-// // //     return res.status(500).json({
-// // //       message: "Registration failed",
-// // //       success: false,
-// // //       error: error.message,
-// // //     });
-// // //   }
-// // // };
-
-// // export const register = async (req, res, next) => {
-// //   const user = await User.findOne({ username: req.body.username });
-// //   console.log(req.body);
-// //   if (user) {
-// //     return res.status(400).send({ message: "User already exists" });
-// //   }
-
-// //   await User.create(req.body);
-
-// //   res.status(200).json({
-// //     success: true,
-// //     message: "User created successfully",
-// //   });
-// // };
-
-// // export const uploadImage = async (req, res, next) => {
-// //   // // check for the file size and send an error message
-// //   // if (req.file.size > process.env.MAX_FILE_UPLOAD) {
-// //   //   return res.status(400).send({
-// //   //     message: `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
-// //   //   });
-// //   // }
-
-// //   if (!req.file) {
-// //     return res.status(400).send({ message: "Please upload a file" });
-// //   }
-// //   res.status(200).json({
-// //     success: true,
-// //     data: req.file.filename,
-// //   });
-// // };
-
-// // export const login = async (req, res) => {
-// //   try {
-// //     const { email, password } = req.body;
-// //     if (!email || !password) {
-// //       return res.status(401).json({
-// //         message: "Something is missing, please check!",
-// //         success: false,
-// //       });
-// //     }
-// //     let user = await User.findOne({ email });
-// //     if (!user) {
-// //       return res.status(401).json({
-// //         message: "Incorrect email or password",
-// //         success: false,
-// //       });
-// //     }
-
-// //     // Check if the user's email is verified
-// //     if (!user.isVerified) {
-// //       return res.status(401).json({
-// //         message: "Email is not verified yet. Please verify your email address.",
-// //         success: false,
-// //       });
-// //     }
-
-// //     const isPasswordMatch = await bcrypt.compare(password, user.password);
-// //     if (!isPasswordMatch) {
-// //       return res.status(401).json({
-// //         message: "Incorrect email or password",
-// //         success: false,
-// //       });
-// //     }
-
-// //     const token = await jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-// //       expiresIn: "1d",
-// //     });
-
-// //     // populate each post if in the posts array
-// //     const populatedPosts = await Promise.all(
-// //       user.posts.map(async (postId) => {
-// //         const post = await Post.findById(postId);
-// //         if (post.author.equals(user._id)) {
-// //           return post;
-// //         }
-// //         return null;
-// //       })
-// //     );
-// //     user = {
-// //       _id: user._id,
-// //       username: user.username,
-// //       email: user.email,
-// //       profilePicture: user.profilePicture,
-// //       bio: user.bio,
-// //       followers: user.followers,
-// //       following: user.following,
-// //       posts: populatedPosts,
-// //     };
-// //     return res
-// //       .cookie("token", token, {
-// //         httpOnly: true,
-// //         sameSite: "strict",
-// //         maxAge: 1 * 24 * 60 * 60 * 1000,
-// //       })
-// //       .json({
-// //         message: `Welcome back ${user.username}`,
-// //         success: true,
-// //         user,
-// //       });
-// //   } catch (error) {
-// //     console.log(error);
-// //     return res.status(500).json({
-// //       message: "Internal server error",
-// //       success: false,
-// //     });
-// //   }
-// // };
-// // export const logout = async (_, res) => {
-// //   try {
-// //     return res.cookie("token", "", { maxAge: 0 }).json({
-// //       message: "Logged out successfully.",
-// //       success: true,
-// //     });
-// //   } catch (error) {
-// //     console.log(error);
-// //   }
-// // };
-
-// // export const getProfile = async (req, res) => {
-// //   try {
-// //     const userId = req.params.id;
-// //     let user = await User.findById(userId)
-// //       .populate({ path: "posts", createdAt: -1 })
-// //       .populate("bookmarks");
-// //     return res.status(200).json({
-// //       user,
-// //       success: true,
-// //     });
-// //   } catch (error) {
-// //     console.log(error);
-// //   }
-// // };
-
-// // export const editProfile = async (req, res) => {
-// //   try {
-// //     const userId = req.id;
-// //     const { bio, gender, username } = req.body;
-// //     const profilePicture = req.file;
-// //     let cloudResponse;
-
-// //     // Check if the user exists or not
-// //     const user = await User.findById(userId).select("-password");
-// //     if (!user) {
-// //       return res.status(404).json({
-// //         message: "User not found.",
-// //         success: false,
-// //       });
-// //     }
-// //     // Check if the username is available or not
-// //     if (username && username !== user.username) {
-// //       const existingUser = await User.findOne({ username });
-// //       if (existingUser) {
-// //         return res
-// //           .status(400)
-// //           .json({ message: "Username already taken", success: false });
-// //       }
-// //     }
-// //     // upload image if exists
-// //     if (profilePicture) {
-// //       const fileUri = getDataUri(profilePicture);
-// //       cloudResponse = await cloudinary.uploader.upload(fileUri);
-// //     }
-
-// //     // Update user fields only if they are present
-// //     if (bio) user.bio = bio;
-// //     if (username) user.username = username;
-// //     if (gender) user.gender = gender;
-// //     if (profilePicture) user.profilePicture = cloudResponse.secure_url;
-
-// //     await user.save();
-
-// //     return res.status(200).json({
-// //       message: "Profile updated.",
-// //       success: true,
-// //       user,
-// //     });
-// //   } catch (error) {
-// //     console.error("Error updating profile:", error);
-// //     let message = "Internal server error";
-// //     if (error.name === "ValidationError") {
-// //       message = "Invalid Input Data";
-// //       return res.status(400).json({
-// //         message,
-// //         success: false,
-// //         errors: error.errors,
-// //       });
-// //     } else if (error.name === "CastError") {
-// //       message = "Invalid ID";
-// //       return res.status(400).json({
-// //         message,
-// //         success: false,
-// //         errors: error.message,
-// //       });
-// //     }
-// //     return res.status(500).json({
-// //       message,
-// //       success: false,
-// //       errors: error,
-// //     });
-// //   }
-// // };
-
-// // export const getSuggestedUsers = async (req, res) => {
-// //   try {
-// //     const suggestedUsers = await User.find({ _id: { $ne: req.id } }).select(
-// //       "-password"
-// //     );
-// //     if (!suggestedUsers) {
-// //       return res.status(400).json({
-// //         message: "Currently do not have any users",
-// //       });
-// //     }
-// //     return res.status(200).json({
-// //       success: true,
-// //       users: suggestedUsers,
-// //     });
-// //   } catch (error) {
-// //     console.log(error);
-// //   }
-// // };
-
-// // export const followOrUnfollow = async (req, res) => {
-// //   try {
-// //     const followKrneWala = req.id; // patel
-// //     const jiskoFollowKrunga = req.params.id; // shivani
-// //     if (followKrneWala === jiskoFollowKrunga) {
-// //       return res.status(400).json({
-// //         message: "You cannot follow/unfollow yourself",
-// //         success: false,
-// //       });
-// //     }
-
-// //     const user = await User.findById(followKrneWala);
-// //     const targetUser = await User.findById(jiskoFollowKrunga);
-
-// //     if (!user || !targetUser) {
-// //       return res.status(400).json({
-// //         message: "User not found",
-// //         success: false,
-// //       });
-// //     }
-// //     // mai check krunga ki follow krna hai ya unfollow
-// //     const isFollowing = user.following.includes(jiskoFollowKrunga);
-// //     if (isFollowing) {
-// //       // unfollow logic ayega
-// //       await Promise.all([
-// //         User.updateOne(
-// //           { _id: followKrneWala },
-// //           { $pull: { following: jiskoFollowKrunga } }
-// //         ),
-// //         User.updateOne(
-// //           { _id: jiskoFollowKrunga },
-// //           { $pull: { followers: followKrneWala } }
-// //         ),
-// //       ]);
-// //       return res
-// //         .status(200)
-// //         .json({ message: "Unfollowed successfully", success: true });
-// //     } else {
-// //       // follow logic ayega
-// //       await Promise.all([
-// //         User.updateOne(
-// //           { _id: followKrneWala },
-// //           { $push: { following: jiskoFollowKrunga } }
-// //         ),
-// //         User.updateOne(
-// //           { _id: jiskoFollowKrunga },
-// //           { $push: { followers: followKrneWala } }
-// //         ),
-// //       ]);
-// //       return res
-// //         .status(200)
-// //         .json({ message: "followed successfully", success: true });
-// //     }
-// //   } catch (error) {
-// //     console.log(error);
-// //   }
-// // };
-
-// // export const verifyEmail = async (req, res) => {
-// //   const { token } = req.params;
-// //   console.log("Received verification token:", token); // Log the received token
-
-// //   try {
-// //     // Find the user with the verification token
-// //     const user = await User.findOne({ verificationToken: token });
-// //     if (!user) {
-// //       return res
-// //         .status(400)
-// //         .json({ message: "Invalid verification token", success: false });
-// //     }
-
-// //     // Mark the user as verified
-// //     user.isVerified = true;
-// //     //user.verificationToken = null; // Clear token after successful verification
-// //     await user.save();
-
-// //     return res
-// //       .status(200)
-// //       .json({ message: "Email verified successfully.", success: true });
-// //   } catch (error) {
-// //     console.error("Error during verification:", error);
-// //     return res
-// //       .status(500)
-// //       .json({ message: "Verification failed", success: false });
-// //   }
-// // };
-
-// import asyncHandler from "../middlewares/async.js";
-// import User from "../models/user.model.js";
-
-// export const register = asyncHandler(async (req, res, next) => {
-//   const user = await User.findOne({ username: req.body.username });
-//   console.log(req.body);
-//   if (user) {
-//     return res.status(400).send({ message: "User already exists" });
-//   }
-
-//   await User.create(req.body);
-
-//   res.status(200).json({
-//     success: true,
-//     message: "User created successfully",
-//   });
-// });
-
-// // @desc   Login user
-// // @route  POST /api/v1/users/login
-// // @access Public
-
-// export const login = asyncHandler(async (req, res, next) => {
-//   const { username, password } = req.body;
-
-//   if (!username || !password) {
-//     return res
-//       .status(400)
-//       .json({ message: "Please provide a username and password" });
-//   }
-
-//   // Check if user exists
-//   const user = await User.findOne({ username }).select("+password");
-
-//   if (!user || !(await user.matchPassword(password))) {
-//     return res.status(401).json({ message: "Invalid credentials" });
-//   }
-
-//   sendTokenResponse(user, 200, res);
-// });
-
-// export const updateUser = asyncHandler(async (req, res, next) => {
-//   const updatedUser = req.body; // renaming `user` to `updatedUser` to avoid conflict
-//   const user = await User.findByIdAndUpdate(req.params.id, updatedUser, {
-//     new: true,
-//     runValidators: true,
-//   });
-
-//   if (!user) {
-//     return res.status(404).send({ message: "User not found" });
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     message: "User updated successfully",
-//     data: user,
-//   });
-// });
-
-// // Get current user
-// // @route   GET /api/v1/users/me
-// // @access  Private
-
-// export const getMe = asyncHandler(async (req, res, next) => {
-//   // Show current user and don't show the password
-//   const user = await User.findById(req.user.id).select("-password");
-
-//   res.status(200).json(user);
-// });
-
-// export const uploadImage = asyncHandler(async (req, res, next) => {
-//   if (!req.file) {
-//     return res.status(400).send({ message: "Please upload a file" });
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     data: req.file.filename,
-//   });
-// });
-
-// // Get token from model, create cookie, and send response
-// const sendTokenResponse = (user, statusCode, res) => {
-//   const token = user.getSignedJwtToken();
-
-//   const options = {
-//     // Cookie will expire in 30 days
-//     expires: new Date(
-//       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-//     ),
-//     httpOnly: true,
-//   };
-
-//   // Cookie security is false. If you want HTTPS, use this code. Do not use in development.
-//   if (process.env.NODE_ENV === "proc") {
-//     options.secure = true;
-//   }
-
-//   res
-//     .status(statusCode)
-//     .cookie("token", token, options) // key, value, options
-//     .json({
-//       success: true,
-//       token,
-//     });
-// };
-
-// ---------------------------------**************************************----------------------------------//
-
 import bcrypt from "bcryptjs"; // Bcrypt for password hashing
 import crypto from "crypto"; // Crypto for generating verification token
 import jwt from "jsonwebtoken"; // JWT for creating tokens (if needed later)
@@ -845,89 +234,80 @@ export const logout = async (_, res) => {
   }
 };
 
+// export const getProfile = async (req, res) => {
+//   try {
+//     const userId = req.params.id;
+//     let user = await User.findById(userId)
+//       .populate({ path: "posts", createdAt: -1 })
+//       .populate("bookmarks");
+//     return res.status(200).json({
+//       user,
+//       success: true,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
-    let user = await User.findById(userId)
-      .populate({ path: "posts", createdAt: -1 })
-      .populate("bookmarks");
+    const user = await User.findById(userId)
+      // Populate the user's own posts
+      .populate({
+        path: "posts",
+        options: { sort: { createdAt: -1 } }, // Sort by createdAt descending
+        populate: [
+          {
+            path: "author",
+            select: "username profilePicture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "username profilePicture",
+            },
+          },
+        ],
+      })
+      // Populate the user's bookmarked posts
+      .populate({
+        path: "bookmarks",
+        populate: [
+          {
+            path: "author",
+            select: "username profilePicture",
+          },
+          {
+            path: "comments",
+            populate: {
+              path: "author",
+              select: "username profilePicture",
+            },
+          },
+        ],
+      });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
     return res.status(200).json({
-      user,
       success: true,
+      user,
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
-
-// export const editProfile = async (req, res) => {
-//   try {
-//     const userId = req.id;
-//     const { bio, gender, username } = req.body;
-//     const profilePicture = req.file;
-//     let cloudResponse;
-
-//     // Check if the user exists or not
-//     const user = await User.findById(userId).select("-password");
-//     if (!user) {
-//       return res.status(404).json({
-//         message: "User not found.",
-//         success: false,
-//       });
-//     }
-//     // Check if the username is available or not
-//     if (username && username !== user.username) {
-//       const existingUser = await User.findOne({ username });
-//       if (existingUser) {
-//         return res
-//           .status(400)
-//           .json({ message: "Username already taken", success: false });
-//       }
-//     }
-//     // upload image if exists
-//     if (profilePicture) {
-//       const fileUri = getDataUri(profilePicture);
-//       cloudResponse = await cloudinary.uploader.upload(fileUri);
-//     }
-
-//     // Update user fields only if they are present
-//     if (bio) user.bio = bio;
-//     if (username) user.username = username;
-//     if (gender) user.gender = gender;
-//     if (profilePicture) user.profilePicture = cloudResponse.secure_url;
-
-//     await user.save();
-
-//     return res.status(200).json({
-//       message: "Profile updated.",
-//       success: true,
-//       user,
-//     });
-//   } catch (error) {
-//     console.error("Error updating profile:", error);
-//     let message = "Internal server error";
-//     if (error.name === "ValidationError") {
-//       message = "Invalid Input Data";
-//       return res.status(400).json({
-//         message,
-//         success: false,
-//         errors: error.errors,
-//       });
-//     } else if (error.name === "CastError") {
-//       message = "Invalid ID";
-//       return res.status(400).json({
-//         message,
-//         success: false,
-//         errors: error.message,
-//       });
-//     }
-//     return res.status(500).json({
-//       message,
-//       success: false,
-//       errors: error,
-//     });
-//   }
-// };
 
 export const editProfile = async (req, res) => {
   try {
@@ -1292,12 +672,10 @@ export const resetPassword = async (req, res) => {
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRegex.test(newPassword)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Password must be at least 8 characters long and contain a number and a special character.",
-        });
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long and contain a number and a special character.",
+      });
     }
 
     // Hash the new password
