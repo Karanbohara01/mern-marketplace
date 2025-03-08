@@ -35,7 +35,7 @@ describe("Category Model Test", function () {
     expect(savedCategory).to.have.property("updatedAt");
   });
 
-  it("should not create a category without required name", async function () {
+  it("should not create a category without required names", async function () {
     const categoryData = {}; // Missing the required "name" field
 
     const category = new Category(categoryData);
